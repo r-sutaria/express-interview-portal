@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 const app = express();
-app.use(express.static(path.join(__dirname,'client/build')));
+app.use(express.static(path.join(__dirname, 'client/build')));
 app.get('/api/passwords',(req,res,next) => {
     const passwords = [1,2,3,4,5];
     res.json(passwords);
