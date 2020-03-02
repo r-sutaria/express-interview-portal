@@ -1,2 +1,2 @@
-import sys,numpy
+import sys
 print('Hello')
