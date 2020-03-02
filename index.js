@@ -1,6 +1,18 @@
 const express = require('express');
 const path = require('path');
 const app = express();
+
+const {exec} = require('child_process');
+let py = exec('python ./PythonScripts/test.py',(err,stdout,stderr)=>{
+    console.log(stdout);
+    if(stderr) {
+        exec('pip3 install camelcase',(err,stdout,stderr)=>{
+           console.log(stdout);
+           console.log(stderr);
+        });
+    }
+
+});
 app.use(express.static(path.join(__dirname, 'client/build')));
 app.get('/api/passwords',(req,res,next) => {
     const passwords = [1,2,3,4,5];
