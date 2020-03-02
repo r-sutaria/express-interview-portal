@@ -5,13 +5,13 @@ const app = express();
 const {exec} = require('child_process');
 let py = exec('python ./PythonScripts/test.py',(err,stdout,stderr)=>{
     console.log('test');
-    // console.log(stdout);
-    // if(stderr) {
-    //     exec('pip3 install camelcase',(err,stdout,stderr)=>{
-    //        console.log(stdout);
-    //        console.log(stderr);
-    //     });
-    // }
+    console.log(stdout);
+    if(stderr) {
+        exec('pip3 install camelcase',(err,stdout,stderr)=>{
+           console.log(stdout);
+           console.log(stderr);
+        });
+    }
 
 });
 app.use(express.static(path.join(__dirname, 'client/build')));
