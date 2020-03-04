@@ -13,7 +13,7 @@ let py = exec('python ./PythonScripts/test.py',(err,stdout,stderr)=>{
         });
     }
 
-});
+});//hello
 app.use(express.static(path.join(__dirname, 'client/build')));
 app.get('/api/passwords',(req,res,next) => {
     const passwords = [1,2,3,4,5];
