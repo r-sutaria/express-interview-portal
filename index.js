@@ -13,8 +13,8 @@ let py = exec('python ./PythonScripts/test.py',(err,stdout,stderr)=>{
         });
     }
 
-});
-app.use(express.static(path.join(__dirname, 'interview-portal-master/build')));
+});//hello
+app.use(express.static(path.join(__dirname, 'client/build')));
 app.get('/api/passwords',(req,res,next) => {
     const passwords = [1,2,3,4,5];
     res.json(passwords);
@@ -22,7 +22,7 @@ app.get('/api/passwords',(req,res,next) => {
 });
 
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname+'/interview-portal-master/build/index.html'));
+    res.sendFile(path.join(__dirname+'/client/build/index.html'));
 });
 
 const port = process.env.PORT || 5000;
