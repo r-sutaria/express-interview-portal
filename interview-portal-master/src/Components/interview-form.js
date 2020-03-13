@@ -5,6 +5,7 @@ export default class ExperienceForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            author: 'Rutvik Sutaria',
             company: 'Amazon',
             rounds:[
                 {
@@ -19,7 +20,7 @@ export default class ExperienceForm extends React.Component {
             stipend:'',
             ctc:'',
             jobProfile:'',
-            jobType:''
+            jobtype:''
         };
         this.addRound = this.addRound.bind(this);
         this.onChangeDetails = this.onChangeDetails.bind(this);
@@ -27,6 +28,42 @@ export default class ExperienceForm extends React.Component {
         this.renderRound = this.renderRound.bind(this);
         this.removeCard = this.removeCard.bind(this);
     }
+
+    saveExperience = () => {
+        const uri='/saveExperience';
+        const data = this.state;
+        fetch(uri,{
+            method:'POST',
+            headers:{
+                'Accept':'application/json',
+                'Content-Type':'application/json'
+            },
+            // body: JSON.stringify({
+            //     "company":data.company,
+            //     "branch":data.branch,
+            //     "jobtype":data.jobtype,
+            //     "ctc":data.ctc,
+            //     "stipend":data.stipend,
+            //     "rounds":data.rounds,
+            //     "author":data.author,
+            //     "likes":0,
+            //     "accepted":"N"
+            // })
+            body: JSON.stringify({
+                'hi':'hi'
+            })
+        }).then(response=>{
+            console.log('Got Here');
+            console.log(response);
+            return response.json()
+        }).then((response)=>{
+                console.log('Got Here-1');
+                console.log(response);
+                if(response.status === 500) {
+                    console.log("Error while connecting to database please check your internet connection");
+                }
+        }).catch(error => console.log(error.message));
+    };
 
     addRound = (event) => {
         const index = this.state.rounds.length;
@@ -39,7 +76,7 @@ export default class ExperienceForm extends React.Component {
         });
         console.log(this.state);
         event.preventDefault();
-    }
+    };
 
     removeCard = (event,round) => {
         event.preventDefault();
@@ -70,7 +107,7 @@ export default class ExperienceForm extends React.Component {
         this.setState({
             rounds: list
         })
-    }
+    };
 
     renderRound = (round,index) => {
         return(
@@ -120,6 +157,39 @@ export default class ExperienceForm extends React.Component {
                             </datalist>
                         </Col>
                     </Row>
+                    <Row>
+                        <Col md={2} className={'mr-1 my-2'}>
+                            <Label
+                                className="col-form-label"
+                                for={'branch'}
+                            >
+                                <h5><b>Branch</b></h5>
+                            </Label>
+                        </Col>
+                        <Col md={'auto'}>
+                            <Input
+                                type='select'
+                                list={'companies'}
+                                name='select'
+                                id='company'
+                                onChange={
+                                    (event) => {
+                                        this.setState({
+                                            branch: event.target.value
+                                        });
+                                    }
+                                }
+                            >
+                                <option value={'Computer Engineering'}>Computer Engineering</option>
+                                <option value={'Information Technology'}>Information Technology</option>
+                                <option value={'Electronics & Communication'}>Electronics & Communication</option>
+                                <option value={'Electrical Engineering'}>Electrical Engineering</option>
+                                <option value={'Mechanical Engineering'}>Mechanical Engineering</option>
+                                <option value={'Civil Engineering'}>Civil Engineering</option>
+                                <option value={'Instrumentation & Control'}>Instrumentation & Control</option>
+                            </Input>
+                        </Col>
+                    </Row>
                     <FormGroup>
                         <Row>
                             <Col md={2} className={'mr-2'}>
@@ -138,7 +208,7 @@ export default class ExperienceForm extends React.Component {
                                             this.setState({
                                                 internship: e.target.value,
                                                 employment: false,
-                                                jobType: '2-month Internship'
+                                                jobtype: '2-month Internship'
                                             })
                                         }}
                                     />
@@ -154,7 +224,7 @@ export default class ExperienceForm extends React.Component {
                                             this.setState({
                                                 internship: e.target.value,
                                                 employment: false,
-                                                jobType: '6-month Internship'
+                                                jobtype: '6-month Internship'
                                             })
                                         }}
                                     />
@@ -170,7 +240,7 @@ export default class ExperienceForm extends React.Component {
                                             this.setState({
                                                 internship: false,
                                                 employment: e.target.value,
-                                                jobType: 'Full TIme Employment'
+                                                jobtype: 'Full TIme Employment'
                                             })
                                         }}
                                     />
@@ -186,7 +256,7 @@ export default class ExperienceForm extends React.Component {
                                             this.setState({
                                                 internship: e.target.value,
                                                 employment: e.target.value,
-                                                jobType: '6-month + Full time Employment'
+                                                jobtype: '6-month + Full time Employment'
                                             })
                                         }}
                                     />
@@ -217,10 +287,10 @@ export default class ExperienceForm extends React.Component {
                                                 min={'0'}
                                                 className={'col-3 float-left'}
                                                 onChange={(e) => {
-                                                    this.setState({
-                                                        stipend: e.target.value + ' per month'
-                                                    })
-                                                }
+                                                        this.setState({
+                                                            stipend: e.target.value + ' per month'
+                                                        })
+                                                    }
                                                 }
                                             />
                                             <b className={'float-left ml-2 col-form-label'}>per month</b>
@@ -359,9 +429,10 @@ export default class ExperienceForm extends React.Component {
                         <Button
                             className={'float-right'}
                             color={'dark'}
-                            onMoudeDown={
+                            onClick={
                                 (event) => {
-                                    event.preventDefault();
+                                    this.saveExperience();
+                                    alert('Hello!');
                                 }
                             }
                         >

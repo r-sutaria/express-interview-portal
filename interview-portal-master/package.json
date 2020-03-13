@@ -2,7 +2,6 @@
   "name": "interview-portal",
   "version": "0.1.0",
   "private": true,
-  "proxy": "https://api.hackerearth.com",
   "homepage": "https://major-project-interview-portal.herokuapp.com/",
   "dependencies": {
     "@testing-library/dom": "^6.12.0",
