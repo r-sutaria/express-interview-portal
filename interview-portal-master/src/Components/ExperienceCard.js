@@ -10,16 +10,16 @@ export default function ExperienceCard(props) {
         <div style={{backgroundColor:'#e3e4e6'}} className={'border border-dark rounded mr-5 mt-2'}>
             <Row>
                 <Col md={11}>
-                    <Link to={link !== undefined? link : '/experience1'} className={'text-dark btn-link'}>
+                    <Link to={'/'+experience.id} className={'text-dark btn-link'}>
                         <h5 className={'m-3'}>
-                            {`${experience.companyName} interview experience for ${experience.jobProfile} by ${experience.author}`}
+                            {`${experience.company} interview experience for ${experience.jobprofile} by ${experience.author}`}
                         </h5>
                     </Link>
                 </Col>
                 <Col md={1}>
                     {
                         !experience.saved ? <Button color={'white mt-2'} title={'Save'} onMouseDown={props.onSaveClick}><FaRegStar/></Button>
-                            : <Button color={'white mt-2'} title={'Unsave'} onMouseDown={props.onSaveClick}><FaStar/></Button>
+                            : <Button color={'white mt-2'} title={'Unsaved'} onMouseDown={props.onSaveClick}><FaStar/></Button>
                     }
                 </Col>
             </Row>
@@ -31,8 +31,8 @@ export default function ExperienceCard(props) {
                 {`Received Offer:  `}{ experience.receivedOffer ? <span className={'text-success ml-1'}><FaCheckCircle /></span> : <span className={'text-danger ml-1'}><FaTimesCircle /></span>}
                 <br/>
                 {
-                    experience.accepted === 'yes' ? <h6>
-                        <span className={'text-success'}><FaThumbsUp size={14}/></span>{' '+experience.helpful+' '} people found this helpful
+                    experience.accepted ? <h6>
+                        <span className={'text-success'}><FaThumbsUp size={14}/></span>{' '+experience.likes+' '} people found this helpful
                     </h6>
                         :
                         <div/>

@@ -20,7 +20,8 @@ export default class ExperienceForm extends React.Component {
             stipend:'',
             ctc:'',
             jobProfile:'',
-            jobtype:''
+            jobtype:'',
+            accepted: false
         };
         this.addRound = this.addRound.bind(this);
         this.onChangeDetails = this.onChangeDetails.bind(this);
@@ -28,6 +29,16 @@ export default class ExperienceForm extends React.Component {
         this.renderRound = this.renderRound.bind(this);
         this.removeCard = this.removeCard.bind(this);
     }
+
+    getDate = () => {
+        let today = new Date();
+        let dd = String(today.getDate()).padStart(2, '0');
+        let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        let yyyy = today.getFullYear();
+
+        today = dd + '/' + mm + '/' + yyyy;
+        return(today);
+    };
 
     saveExperience = () => {
         const uri='/saveExperience';
@@ -38,31 +49,30 @@ export default class ExperienceForm extends React.Component {
                 'Accept':'application/json',
                 'Content-Type':'application/json'
             },
-            // body: JSON.stringify({
-            //     "company":data.company,
-            //     "branch":data.branch,
-            //     "jobtype":data.jobtype,
-            //     "ctc":data.ctc,
-            //     "stipend":data.stipend,
-            //     "rounds":data.rounds,
-            //     "author":data.author,
-            //     "likes":0,
-            //     "accepted":"N"
-            // })
             body: JSON.stringify({
-                "hi":"hi"
+                "company":data.company,
+                "branch":data.branch,
+                "jobtype":data.jobtype,
+                "ctc":data.ctc,
+                "stipend":data.stipend,
+                "rounds":data.rounds,
+                "author":data.author,
+                "likes":0,
+                "accepted":false,
+                "receivedOffer":data.receivedOffer,
+                "date":this.getDate()
             })
-        }).then(response=>{
-            console.log('Got Here');
+        }).then( response => {
+            // console.log('Got Here');
             console.log(response);
             return response.json()
-        }).then((response)=>{
-                console.log('Got Here-1');
+        }).then((response) => {
+                // console.log('Got Here-1');
                 console.log(response);
                 if(response.status === 500) {
                     console.log("Error while connecting to database please check your internet connection");
                 }
-        }).catch(error => console.log(error.message));
+        }).catch( error => console.log(error.message));
     };
 
     addRound = (event) => {

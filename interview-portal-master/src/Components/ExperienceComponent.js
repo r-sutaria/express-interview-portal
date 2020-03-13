@@ -8,44 +8,40 @@ export default class ExperienceList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            experiences: [
-                {
-                    companyName: 'Amazon',
-                    author: 'Rutvik Sutaria',
-                    jobType: '6 month Internship + FTE',
-                    jobProfile: 'Software Development Engineer',
-                    n_rounds: 3,
-                    ctc: '28 Lakhs',
-                    stipend: '60k',
-                    receivedOffer: true,
-                    date: '04/02/2020',
-                    saved: false,
-                    helpful: 56,
-                    accepted: 'none'
-                },
-                {
-                    companyName: 'Amazon',
-                    author: 'Rutvik Sutaria',
-                    jobType: '6 month Internship + FTE',
-                    jobProfile: 'Software Development Engineer',
-                    n_rounds: 3,
-                    ctc: '28 Lakhs',
-                    stipend: '60k',
-                    receivedOffer: true,
-                    date: '04/02/2020',
-                    saved: false,
-                    helpful: 56,
-                    accepted: 'yes'
-                }
-            ]
-        }
+            experiences: []
+        };
+        this.getExperiences();
     }
+
+    getExperiences = () => {
+        fetch('/experiences')
+            .then(res => res.json())
+            .then(res => {
+                let experiences = res.map((item) => {
+                    return({
+                        id: res.id,
+                        company: res.company,
+                        jobprofile: res.jobprofile,
+                        author: res.author,
+                        accepted: res.accepted,
+                        receivedOffer: res.receivedOffer,
+                        saved: false,
+                        date: res.date,
+                        likes: res.likes
+                    });
+                });
+                this.setState({experiences});
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    };
 
     onSaveClick = (e) => {
       e.preventDefault();
-      this.setState({
-          saved: !this.state.saved
-      });
+      // this.setState({
+      //     saved: !this.state.saved
+      // });
     };
 
     render() {
@@ -97,7 +93,7 @@ export default class ExperienceList extends React.Component {
                 {/*{this.renderExperienceCard(experiences[0])}*/}
                 {/*<ExperienceCard experience={experiences[0]} onSaveClick={this.onSaveClick}/>*/}
                 {
-                    this.state.experiences.map(experience => {
+                    experiences.map(experience => {
                         return(experience.accepted === 'yes' ? <ExperienceCard experience={experience} link={'/experience2'} onSaveClick={this.onSaveClick}/>
                             : <div />
                         )

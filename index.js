@@ -5,8 +5,6 @@ const bodyparser = require('body-parser');
 app.use(bodyparser.json());
 const {exec} = require('child_process');
 let py = exec('python ./PythonScripts/test.py',(err,stdout,stderr)=>{
-    // console.log('test');
-    // console.log(stdout);
     if(stderr) {
         exec('pip3 install camelcase',(err,stdout,stderr)=>{
            console.log(stdout);
@@ -15,29 +13,32 @@ let py = exec('python ./PythonScripts/test.py',(err,stdout,stderr)=>{
     }
 
 });
-
+const MongoClient = require('mongodb').MongoClient;
 app.post('/saveExperience',function(req,res){
     const data=req.body;
-    const MongoClient = require('mongodb').MongoClient;
     const uri = "mongodb+srv://kd_321:1234@interviewportal-eiozy.mongodb.net/test?retryWrites=true&w=majority";
     console.log('got here');
-    const client = new MongoClient(uri, { useNewUrlParser: true });
+    const client = new MongoClient(uri, { useNewUrlParser: true,useUnifiedTopology: true  });
     MongoClient.connect(uri,function(err,client){
         if(err){
             res.status(500).send("unable to connect to database");
         }else{
             const collection=client.db("Main").collection("Experience");
-            let sample={"company":data.company,
+            let experience={
+                "company":data.company,
                 "branch":data.branch,
                 "jobtype":data.jobtype,
+                "jobprofile":data.jobprofile,
                 "ctc":data.ctc,
                 "stipend":data.stipend,
                 "rounds":data.rounds,
                 "author":data.author,
+                "date": data.date,
+                "receivedOffer": data.receivedOffer,
                 "likes":0,
-                "accepted":"N"
+                "accepted":data.accepted
             };
-            collection.insertOne(sample,function(err,resp){
+            collection.insertOne(experience,function(err,resp){
                 if(err) {
                     res.status(500).send("Error");
                     console.log(err);
@@ -49,6 +50,47 @@ app.post('/saveExperience',function(req,res){
         }
     });
 
+});
+app.get('/experiences',(req,res,next) => {
+    console.log('Experience Get Request');
+    const MongoClient = require('mongodb').MongoClient;
+    const uri = "mongodb+srv://kd_321:1234@interviewportal-eiozy.mongodb.net/test?retryWrites=true&w=majority";
+    const client = new MongoClient(uri, { useNewUrlParser: true,useUnifiedTopology: true  });
+    MongoClient.connect(uri,function(err,client){
+        if(err)
+            console.log("Error while connecting to DB");
+        else{
+            const collection = client.db("Main").collection("Experience");
+            let cursor=collection.find();
+            let arr=[];
+            cursor.each(function(err,doc){
+                if(doc!=null){
+                    if(doc.accepted==="Y"){
+
+                        arr.push({
+                            "id":doc._id,
+                            "company":doc.company,
+                            "branch":doc.branch,
+                            "jobtype":doc.jobtype,
+                            "jobprofile":doc.jobprofile,
+                            "receivedOffer":doc.receivedOffer,
+                            "ctc":doc.ctc,
+                            "stipend":doc.stipend,
+                            "rounds":doc.rounds,
+                            "author":doc.author,
+                            "likes":doc.likes,
+                            "accepted":doc.accepted,
+                            "date":doc.date
+                        });
+                    }
+                }
+                else{
+                    client.close();
+                    res.status(200).send(arr);
+                }
+            });
+        }
+    });
 });
 app.use(express.static(path.join(__dirname, 'interview-portal-master/build')));
 app.get('/api/passwords',(req,res,next) => {
