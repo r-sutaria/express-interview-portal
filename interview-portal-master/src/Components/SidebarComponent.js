@@ -69,7 +69,7 @@ export default class Sidebar extends React.Component {
     }
 
     render() {
-        console.log(this.props);
+        // console.log(this.props);
         return(
             <nav className={'sidebar border-dark border-right'} style={{backgroundColor: '#c1c1c1',minHeight:this.state.height-57,width: '13%',minWidth:200,position: 'fixed',float:'left'}}>
                 <div>
