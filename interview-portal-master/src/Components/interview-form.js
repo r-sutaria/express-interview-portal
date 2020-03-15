@@ -63,11 +63,9 @@ export default class ExperienceForm extends React.Component {
                 "date":this.getDate()
             })
         }).then( response => {
-            // console.log('Got Here');
             console.log(response);
             return response.json()
         }).then((response) => {
-                // console.log('Got Here-1');
                 console.log(response);
                 if(response.status === 500) {
                     console.log("Error while connecting to database please check your internet connection");
