@@ -17,20 +17,9 @@ export default class ExperienceList extends React.Component {
         fetch('/experiences')
             .then(res => res.json())
             .then(res => {
-                let experiences = res.map((item) => {
-                    return({
-                        id: res.id,
-                        company: res.company,
-                        jobprofile: res.jobprofile,
-                        author: res.author,
-                        accepted: res.accepted,
-                        receivedOffer: res.receivedOffer,
-                        saved: false,
-                        date: res.date,
-                        likes: res.likes
-                    });
-                });
+                let experiences = res;
                 this.setState({experiences});
+                console.log(experiences);
             })
             .catch(err => {
                 console.log(err);
@@ -94,7 +83,8 @@ export default class ExperienceList extends React.Component {
                 {/*<ExperienceCard experience={experiences[0]} onSaveClick={this.onSaveClick}/>*/}
                 {
                     experiences.map(experience => {
-                        return(experience.accepted === 'yes' ? <ExperienceCard experience={experience} link={'/experience2'} onSaveClick={this.onSaveClick}/>
+                        console.log(experience);
+                        return(experience.accepted  ? <ExperienceCard key={experience._id} experience={experience} link={'/experience2'} onSaveClick={this.onSaveClick}/>
                             : <div />
                         )
                     })

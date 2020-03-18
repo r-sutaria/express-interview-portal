@@ -4,13 +4,13 @@ import {Link} from "react-router-dom";
 import {FaCheckCircle, FaRegStar, FaStar, FaThumbsUp, FaTimesCircle} from "react-icons/all";
 
 export default function ExperienceCard(props) {
-    const {experience,link} = props;
+    const {experience} = props;
     console.log(experience);
     return(
-        <div style={{backgroundColor:'#e3e4e6'}} className={'border border-dark rounded mr-5 mt-2'}>
+        <div key={experience._id} style={{backgroundColor:'#e3e4e6'}} className={'border border-dark rounded mr-5 mt-2'}>
             <Row>
                 <Col md={11}>
-                    <Link to={'/'+experience.id} className={'text-dark btn-link'}>
+                    <Link to={'/experiences/'+experience._id} className={'text-dark btn-link'}>
                         <h5 className={'m-3'}>
                             {`${experience.company} interview experience for ${experience.jobprofile} by ${experience.author}`}
                         </h5>

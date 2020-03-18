@@ -25,8 +25,7 @@ export default function Main() {
         <Route exact path={'/practice'} component={PracticePage} />
         <Route exact path={'/queries'} component={QueryPageComponent}/>
         <Route exact path={'/experiences'} component={ExperienceList} />
-        <Route exact path={'/experience1'} component={ExperiencePage} />
-        <Route exact path={'/experience2'} component={() => <ExperiencePage accepted={'yes'}/>} />
+        <Route exact path={'/experiences/:id'} component={ExperiencePage} />
         <Route exact path={'/query1'} component={BlogList} />
         <Route exact path={'/notifications'} component={NotificationComponent} />
         <Route path={'/search::term'} component={SearchPage} />

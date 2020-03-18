@@ -14,11 +14,11 @@ let py = exec('python ./PythonScripts/test.py',(err,stdout,stderr)=>{
 
 });
 const MongoClient = require('mongodb').MongoClient;
+const {ObjectId} = require('mongodb');
+const uri = "mongodb+srv://kd_321:1234@interviewportal-eiozy.mongodb.net/test?retryWrites=true&w=majority";
+const client = new MongoClient(uri, { useNewUrlParser: true,useUnifiedTopology: true  });
 app.post('/saveExperience',function(req,res){
     const data=req.body;
-    const uri = "mongodb+srv://kd_321:1234@interviewportal-eiozy.mongodb.net/test?retryWrites=true&w=majority";
-    console.log('got here');
-    const client = new MongoClient(uri, { useNewUrlParser: true,useUnifiedTopology: true  });
     MongoClient.connect(uri,function(err,client){
         if(err){
             res.status(500).send("unable to connect to database");
@@ -47,47 +47,57 @@ app.post('/saveExperience',function(req,res){
                     res.status(200).send("Inserted");
 
             });
+            client.close();
         }
     });
 
 });
-app.get('/experiences',(req,res,next) => {
-    console.log('Experience Get Request');
-    const MongoClient = require('mongodb').MongoClient;
-    const uri = "mongodb+srv://kd_321:1234@interviewportal-eiozy.mongodb.net/test?retryWrites=true&w=majority";
-    const client = new MongoClient(uri, { useNewUrlParser: true,useUnifiedTopology: true  });
+app.post('/getExperience',(req,res,next) => {
+    // console.log('Experience Get Request');
+    const data = req.body;
     MongoClient.connect(uri,function(err,client){
         if(err)
             console.log("Error while connecting to DB");
         else{
             const collection = client.db("Main").collection("Experience");
-            let cursor=collection.find();
-            let arr=[];
-            cursor.each(function(err,doc){
-                if(doc!=null){
-                    if(doc.accepted==="Y"){
-
-                        arr.push({
-                            "id":doc._id,
-                            "company":doc.company,
-                            "branch":doc.branch,
-                            "jobtype":doc.jobtype,
-                            "jobprofile":doc.jobprofile,
-                            "receivedOffer":doc.receivedOffer,
-                            "ctc":doc.ctc,
-                            "stipend":doc.stipend,
-                            "rounds":doc.rounds,
-                            "author":doc.author,
-                            "likes":doc.likes,
-                            "accepted":doc.accepted,
-                            "date":doc.date
-                        });
-                    }
-                }
-                else{
-                    client.close();
-                    res.status(200).send(arr);
-                }
+            // console.log(req.params.id);
+            let cursor=collection.find({_id:ObjectId(data.id)});
+            cursor.toArray((err,resp)=>{
+                if(err) throw err;
+                res.status(200).send(resp);
+                client.close();
+            })
+        }
+    });
+});
+app.get('/experiences',(req,res,next) => {
+    console.log('Experience Get Request');
+    MongoClient.connect(uri,function(err,client){
+        if(err)
+            console.log("Error while connecting to DB");
+        else{
+            const collection = client.db("Main").collection("Experience");
+            let cursor=collection.find({});
+            cursor.toArray((err,resp)=>{
+                if(err) throw err;
+                res.status(200).send(resp);
+                client.close();
+            })
+        }
+    });
+});
+app.get('/queries',(req,res) => {
+    MongoClient.connect(uri,function(err,client){
+        if(err){
+            console.log("Error while connecting to DB");
+            res.status(500).send("Unable to connect to DB");
+        }else{
+            const collection=client.db("Main").collection("Queries");
+            const cursor=collection.find();
+            cursor.toArray((err,resp)=>{
+                if(err) throw err;
+                res.status(200).send(resp);
+                client.close();
             });
         }
     });

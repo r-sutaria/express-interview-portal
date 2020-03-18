@@ -7,6 +7,7 @@ export default class ExperienceForm extends React.Component {
         this.state = {
             author: 'Rutvik Sutaria',
             company: 'Amazon',
+            branch: 'Computer Engineering',
             rounds:[
                 {
                     id: '1',
@@ -19,7 +20,7 @@ export default class ExperienceForm extends React.Component {
             receivedOffer: true,
             stipend:'',
             ctc:'',
-            jobProfile:'',
+            jobprofile:'',
             jobtype:'',
             accepted: false
         };
@@ -53,6 +54,7 @@ export default class ExperienceForm extends React.Component {
                 "company":data.company,
                 "branch":data.branch,
                 "jobtype":data.jobtype,
+                "jobprofile": data.jobprofile,
                 "ctc":data.ctc,
                 "stipend":data.stipend,
                 "rounds":data.rounds,
@@ -180,6 +182,7 @@ export default class ExperienceForm extends React.Component {
                                 list={'companies'}
                                 name='select'
                                 id='company'
+                                value={this.state.branch}
                                 onChange={
                                     (event) => {
                                         this.setState({
@@ -361,7 +364,7 @@ export default class ExperienceForm extends React.Component {
                                     value={this.state.jobProfile}
                                     onChange={(e) => {
                                         this.setState({
-                                            jobProfile: e.target.value
+                                            jobprofile: e.target.value
                                         })
                                     }}
                                 />
@@ -440,7 +443,6 @@ export default class ExperienceForm extends React.Component {
                             onClick={
                                 (event) => {
                                     this.saveExperience();
-                                    alert('Hello!');
                                 }
                             }
                         >
