@@ -70,6 +70,22 @@ app.post('/getExperience',(req,res,next) => {
         }
     });
 });
+app.post('/getQuery',(req,res,next) => {
+    const data = req.body;
+    MongoClient.connect(uri,function(err,client){
+        if(err)
+            console.log("Error while connecting to DB");
+        else{
+            const collection = client.db("Main").collection("Queries");
+            let cursor=collection.find({_id:ObjectId(data.id)});
+            cursor.toArray((err,resp)=>{
+                if(err) throw err;
+                res.status(200).send(resp);
+                client.close();
+            })
+        }
+    });
+})
 app.get('/experiences',(req,res,next) => {
     console.log('Experience Get Request');
     MongoClient.connect(uri,function(err,client){

@@ -6,17 +6,33 @@ export default class QueryPageComponent extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            isModalOpen: false
-        }
+            isModalOpen: false,
+            queries: []
+        };
+        this.getQueries();
     }
 
     toggleModal = () => {
         this.setState({
             isModalOpen: !this.state.isModalOpen
         })
-    }
+    };
+
+    getQueries = () => {
+        fetch('/queries')
+            .then(res => res.json())
+            .then(res => {
+                let queries = res;
+                this.setState({queries});
+                console.log(queries);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    };
 
     render() {
+        const {queries} = this.state;
         return (
             <div>
                 <div className={'border-bottom'}>
@@ -58,10 +74,16 @@ export default class QueryPageComponent extends React.Component {
                         </Button>
                     </ModalFooter>
                 </Modal>
-                <QueryCard />
-                <QueryCard />
-                <QueryCard />
-                <QueryCard />
+                {/*<QueryCard />*/}
+                {/*<QueryCard />*/}
+                {/*<QueryCard />*/}
+                {/*<QueryCard />*/}
+                {
+                    queries.length !== 0 ? queries.map((query,index) => {
+                        return <QueryCard key={index} id={query._id} question={query.question} />
+                    }):
+                        <img src={'loading.gif'} alt={'Loading...'} style={{position:'absolute',top:'50%',left:'50%'}} />
+                }
             </div>
         );
     }

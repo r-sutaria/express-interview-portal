@@ -26,7 +26,7 @@ export default function Main() {
         <Route exact path={'/queries'} component={QueryPageComponent}/>
         <Route exact path={'/experiences'} component={ExperienceList} />
         <Route exact path={'/experiences/:id'} component={ExperiencePage} />
-        <Route exact path={'/query1'} component={BlogList} />
+        <Route exact path={'/queries/:id'} component={BlogList} />
         <Route exact path={'/notifications'} component={NotificationComponent} />
         <Route path={'/search::term'} component={SearchPage} />
         <Route path={'/saved'} component={SavedPage} />

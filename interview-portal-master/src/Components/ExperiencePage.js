@@ -16,7 +16,6 @@ export default class ExperiencePage extends React.Component {
 
     getExperiences = () => {
         const uri='/getExperience';
-        const data = this.state;
         fetch(uri,{
             method:'POST',
             headers:{

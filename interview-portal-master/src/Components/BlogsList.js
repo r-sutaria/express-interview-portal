@@ -16,35 +16,41 @@ export default class BlogList extends React.Component {
         this.state = {
             isOptionsOpen: false,
             answer: false,
-            answers: [
-                {
-                    id: 0,
-                    answer:
-                        <div>
-                            I attended Amazon interview recently. You need to be good at basics of data structures,
-                            algorithms and object oriented design.
-                            One cannot read object oriented concepts and become a master in it.
-                            Try implementing it in whatever the project you're doing.
-                            That way it's easy to gain the intuition about the object oriented programming and design.
-                            I prepared for data structure questions from cracking the coding interview.
-                            You need to understand the basics of the important data structures and
-                            how they work and try implementing the basic version of those.
-                            This will help in understanding its applications and apply those data structures to solve the questions
-                            asked by the interviewer in the minimum complexity. I have noticed that they are not satisfied with our solutions
-                            if it is not with minimum space and time complexity.
-                        </div>,
-                    helpful: 'none'
-                }
-            ],
+            query: {},
+            answers: [],
             width: window.innerWidth,
-            height: window.innerHeight
+            height: window.innerHeight,
+            loading: true
         };
+        this.getQuery();
     }
+
+    getQuery = () => {
+        const uri='/getQuery';
+        fetch(uri,{
+            method:'POST',
+            headers:{
+                'Accept':'application/json',
+                'Content-Type':'application/json'
+            },
+            body: JSON.stringify({
+                "id":this.props.match.params.id
+            })
+        }).then( response => {
+            return response.json()
+        }).then((response) => {
+            const query = response[0];
+            this.setState({query,loading:false});
+            console.log(query);
+            if(response.status === 500) {
+                console.log("Error while connecting to database please check your internet connection");
+            }
+        }).catch( error => console.log(error.message));
+    };
 
     onClickHelpful = (e,currentAnswer) => {
         e.preventDefault();
         const {answers} = this.state;
-        console.log(currentAnswer);
         const newAnswers = answers.map(answer => {
            return answer.id ===  currentAnswer.id ? {
                id:answer.id,
@@ -54,14 +60,12 @@ export default class BlogList extends React.Component {
            :
                answer
         });
-        console.log(newAnswers);
         this.setState({answers: newAnswers});
     };
 
     onClickNotHelpful = (e,currentAnswer) => {
         e.preventDefault();
         const {answers} = this.state;
-        console.log(currentAnswer);
         const newAnswers = answers.map(answer => {
             return answer.id ===  currentAnswer.id ? {
                     id:answer.id,
@@ -71,7 +75,6 @@ export default class BlogList extends React.Component {
                 :
                 answer
         });
-        console.log(newAnswers);
         this.setState({answers: newAnswers});
     };
 
@@ -102,111 +105,117 @@ export default class BlogList extends React.Component {
     render() {
         return (
             <div className={'mt-2'} style={{minHeight: this.state.height-57,width:'1000'}}>
-                <Card>
-                    <div className={'mx-4 mt-2 border-bottom'}>
-                        <div className={'row'}>
-                            <b className={'col-11'}>
-                                <h4>
-                                    What are some tips to crack the Amazon interview?
-                                </h4>
-                            </b>
-                        </div>
-                        <div className={'row mb-1'}>
-                            <div className={'col-6'}>
-                                <Button
-                                    className={'border-0 mb-2'}
-                                    color={'dark'}
-                                    size={'sm'}
-                                    onMouseDown={(e) => {
-                                        this.setState({
-                                            answer: !this.state.answer
-                                        });
-                                        e.preventDefault();
-                                    }}
-                                >
-                                    <AiFillEdit size={'20px'}/>
-                                    {' Answer'}
-                                </Button>
-                                <Button
-                                    className={'border-0 ml-2 mb-2'}
-                                    color={'dark'}
-                                    size={'sm'}
-                                    onMouseDown={(e) => {
-                                        e.preventDefault();
-                                    }}
-                                >
-                                    <FaStar size={'20px'}/>
-                                    {' Save'}
-                                </Button>
+                {
+                    !this.state.loading ?
+                    <Card>
+                        <div className={'mx-4 mt-2 border-bottom'}>
+                            <div className={'row'}>
+                                <b className={'col-11'}>
+                                    <h4>
+                                        {this.state.query.question}
+                                    </h4>
+                                </b>
                             </div>
-                            <div className={'col-6'}>
-                                <div className={'text-right'}>
+                            <div className={'row mb-1'}>
+                                <div className={'col-6'}>
                                     <Button
-                                        className={'border-0 mb-1'}
-                                        color={'white'}
-                                        title={'Comment'}
+                                        className={'border-0 mb-2'}
+                                        color={'dark'}
+                                        size={'sm'}
                                         onMouseDown={(e) => {
-                                            console.log('mouse down!');
+                                            this.setState({
+                                                answer: !this.state.answer
+                                            });
                                             e.preventDefault();
                                         }}
                                     >
-                                        <FaComment/>
+                                        <AiFillEdit size={'20px'}/>
+                                        {' Answer'}
                                     </Button>
                                     <Button
-                                        className={'border-0 mb-1'}
-                                        color={'white'}
-                                        title={'Report this question'}
+                                        className={'border-0 ml-2 mb-2'}
+                                        color={'dark'}
+                                        size={'sm'}
                                         onMouseDown={(e) => {
-                                            console.log('mouse down!');
                                             e.preventDefault();
                                         }}
                                     >
-                                        <AiOutlineStop/>
+                                        <FaStar size={'20px'}/>
+                                        {' Save'}
                                     </Button>
-                                    <Button
-                                        className={'border-0 mb-1'}
-                                        color={'white'}
-                                        onMouseDown={(e) => {
-                                            console.log('mouse down!');
-                                            e.preventDefault();
-                                        }}
-                                        title={'Share on Facebook'}
-                                    >
-                                        <FaFacebookF/>
-                                    </Button>
-                                    <Button
-                                        className={'border-0 mb-1'}
-                                        color={'white'}
-                                        title={'Share on Twitter'}
-                                        onMouseDown={(e) => {
-                                            console.log('mouse down!');
-                                            e.preventDefault();
-                                        }}
-                                    >
-                                        <FaTwitter/>
-                                    </Button>
+                                </div>
+                                <div className={'col-6'}>
+                                    <div className={'text-right'}>
+                                        <Button
+                                            className={'border-0 mb-1'}
+                                            color={'white'}
+                                            title={'Comment'}
+                                            onMouseDown={(e) => {
+                                                console.log('mouse down!');
+                                                e.preventDefault();
+                                            }}
+                                        >
+                                            <FaComment/>
+                                        </Button>
+                                        <Button
+                                            className={'border-0 mb-1'}
+                                            color={'white'}
+                                            title={'Report this question'}
+                                            onMouseDown={(e) => {
+                                                console.log('mouse down!');
+                                                e.preventDefault();
+                                            }}
+                                        >
+                                            <AiOutlineStop/>
+                                        </Button>
+                                        <Button
+                                            className={'border-0 mb-1'}
+                                            color={'white'}
+                                            onMouseDown={(e) => {
+                                                console.log('mouse down!');
+                                                e.preventDefault();
+                                            }}
+                                            title={'Share on Facebook'}
+                                        >
+                                            <FaFacebookF/>
+                                        </Button>
+                                        <Button
+                                            className={'border-0 mb-1'}
+                                            color={'white'}
+                                            title={'Share on Twitter'}
+                                            onMouseDown={(e) => {
+                                                console.log('mouse down!');
+                                                e.preventDefault();
+                                            }}
+                                        >
+                                            <FaTwitter/>
+                                        </Button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    {
-                        this.state.answer
-                            ? <AnswerBox
-                                    onSubmit={this.onSubmit}
-                            />
-                            : <div>
-                                <br/>
-                            </div>
-                    }
-                    {
-                        this.state.answers.map(answer =>
-                        <AnswerCard
-                            answer={answer}
-                            onClickHelpful={this.onClickHelpful}
-                            onClickNotHelpful={this.onClickNotHelpful}
-                        />)
-                    }
-                </Card>
+                        {
+                            this.state.answer
+                                ? <AnswerBox
+                                        onSubmit={this.onSubmit}
+                                />
+                                : <div>
+                                    <br/>
+                                </div>
+                        }
+                        {
+                            this.state.answers.map(answer =>
+                            <AnswerCard
+                                key={answer.id}
+                                answer={answer}
+                                onClickHelpful={this.onClickHelpful}
+                                onClickNotHelpful={this.onClickNotHelpful}
+                            />)
+                        }
+                    </Card>
+                    :
+                    <img src={'/loading.gif'} alt={'Loading..'} style={{position:'absolute',top:'50%',left:'50%'}}/>
+                }
             </div>
         )
     }

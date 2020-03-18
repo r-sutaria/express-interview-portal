@@ -20,14 +20,15 @@ export default class QueryCard extends React.Component {
     };
 
     render() {
+        const {id,question} = this.props;
         return (
             <div style={{backgroundColor:'#e3e4e6'}} className={'border border-dark rounded mr-5 mt-2'}>
                 <Row>
                     <Col md={11}>
-                        <Link to={'/query1'} className={'text-dark btn-link'}>
+                        <Link to={'/queries/'+id} className={'text-dark btn-link'}>
                             <div className={'ml-3'}>
                                 <h5 className={'m-3'}>
-                                    What are some tips to crack Amazon interview?
+                                    {question}
                                 </h5>
                             </div>
                         </Link>
@@ -58,7 +59,7 @@ export default class QueryCard extends React.Component {
                             This will help in understanding its applications...
                         </div>
                         {'...'}
-                        <Link to={'/query1/answer1'}>
+                        <Link to={'/queries/'+id+'/answer/'}>
                             (more)
                         </Link>
                     </div>
