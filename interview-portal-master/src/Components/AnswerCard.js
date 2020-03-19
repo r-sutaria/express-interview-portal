@@ -11,7 +11,7 @@ export default function AnswerCard(props){
         <div className={'m-2 mr-5 border-bottom'}>
             <AnswerProfileCard
                 src={'/pikachu.jpg'}
-                name={'Rutvik Sutaria'}
+                name={ans.author}
                 description={'8th semester CSE student'}
             />
             <div className={'m-3'}>
@@ -25,7 +25,7 @@ export default function AnswerCard(props){
                             <span className={'text-success'}>
                                 <FaThumbsUp/>
                             </span>
-                                56 people found this helpful
+                                {ans.likes} people found this helpful
                         </span> : <div/>
                     }
                     <h6>

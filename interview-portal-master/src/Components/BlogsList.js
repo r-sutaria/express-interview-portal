@@ -25,27 +25,33 @@ export default class BlogList extends React.Component {
         this.getQuery();
     }
 
-    getQuery = () => {
-        const uri='/getQuery';
-        fetch(uri,{
+    fetchReq = async(uri,id) => {
+        const response = await fetch(uri,{
             method:'POST',
             headers:{
                 'Accept':'application/json',
                 'Content-Type':'application/json'
             },
             body: JSON.stringify({
-                "id":this.props.match.params.id
+                "id":id
             })
-        }).then( response => {
-            return response.json()
-        }).then((response) => {
-            const query = response[0];
-            this.setState({query,loading:false});
-            console.log(query);
-            if(response.status === 500) {
-                console.log("Error while connecting to database please check your internet connection");
-            }
-        }).catch( error => console.log(error.message));
+        });
+        return await response.json();
+    };
+
+    getQuery() {
+        this.fetchReq('/getQuery',this.props.match.params.id).then(query => {
+            this.fetchReq('/getAnswers',query[0].answers).then(answers => {
+                this.setState({
+                    query: query[0],answers,loading: false
+                })
+            });
+        });
+        // const answers = query.answers.map((answer_id) => {
+        //     return this.fetchReq('/getAnswer')[0];
+        // });
+        // this.setState({query,answers,loading:false});
+        // console.log(query);
     };
 
     onClickHelpful = (e,currentAnswer) => {
@@ -206,7 +212,7 @@ export default class BlogList extends React.Component {
                         {
                             this.state.answers.map(answer =>
                             <AnswerCard
-                                key={answer.id}
+                                key={answer._id}
                                 answer={answer}
                                 onClickHelpful={this.onClickHelpful}
                                 onClickNotHelpful={this.onClickNotHelpful}

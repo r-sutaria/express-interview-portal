@@ -72,6 +72,7 @@ app.post('/getExperience',(req,res,next) => {
 });
 app.post('/getQuery',(req,res,next) => {
     const data = req.body;
+    // console.log('Query request.');
     MongoClient.connect(uri,function(err,client){
         if(err)
             console.log("Error while connecting to DB");
@@ -81,11 +82,29 @@ app.post('/getQuery',(req,res,next) => {
             cursor.toArray((err,resp)=>{
                 if(err) throw err;
                 res.status(200).send(resp);
+                // console.log(resp);
                 client.close();
             })
         }
     });
-})
+});
+app.post('/getAnswers',(req,res,next) => {
+    const data = req.body;
+    MongoClient.connect(uri,function(err,client){
+        if(err)
+            console.log("Error while connecting to DB");
+        else{
+            const collection = client.db("Main").collection("Answers");
+            const ids = data.id.map(id => ObjectId(id));
+            let cursor=collection.find({_id:{$in: ids}});
+            cursor.toArray((err,resp)=>{
+                if(err) throw err;
+                res.status(200).send(resp);
+                client.close();
+            })
+        }
+    });
+});
 app.get('/experiences',(req,res,next) => {
     console.log('Experience Get Request');
     MongoClient.connect(uri,function(err,client){
