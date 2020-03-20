@@ -1,0 +1,26 @@
+{
+  "files": {
+    "main.css": "/static/css/main.976748ff.chunk.css",
+    "main.js": "/static/js/main.7520adcb.chunk.js",
+    "main.js.map": "/static/js/main.7520adcb.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.91aece55.js",
+    "runtime-main.js.map": "/static/js/runtime-main.91aece55.js.map",
+    "static/css/2.7f100d33.chunk.css": "/static/css/2.7f100d33.chunk.css",
+    "static/js/2.131eb15d.chunk.js": "/static/js/2.131eb15d.chunk.js",
+    "static/js/2.131eb15d.chunk.js.map": "/static/js/2.131eb15d.chunk.js.map",
+    "index.html": "/index.html",
+    "precache-manifest.cf9c76d3fd5af195fcd6be5054eb2f46.js": "/precache-manifest.cf9c76d3fd5af195fcd6be5054eb2f46.js",
+    "service-worker.js": "/service-worker.js",
+    "static/css/2.7f100d33.chunk.css.map": "/static/css/2.7f100d33.chunk.css.map",
+    "static/css/main.976748ff.chunk.css.map": "/static/css/main.976748ff.chunk.css.map",
+    "static/js/2.131eb15d.chunk.js.LICENSE": "/static/js/2.131eb15d.chunk.js.LICENSE",
+    "static/media/pikachu.jpg": "/static/media/pikachu.00dd440a.jpg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.91aece55.js",
+    "static/css/2.7f100d33.chunk.css",
+    "static/js/2.131eb15d.chunk.js",
+    "static/css/main.976748ff.chunk.css",
+    "static/js/main.7520adcb.chunk.js"
+  ]
+}

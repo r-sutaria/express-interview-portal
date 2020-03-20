@@ -11,7 +11,6 @@ import "ace-builds/src-noconflict/theme-twilight";
 import "ace-builds/src-noconflict/theme-solarized_dark";
 import "ace-builds/src-noconflict/theme-terminal";
 import "ace-builds/src-noconflict/theme-xcode";
-import HackerEarth from 'hackerearth-node';
 // let he = new HackerEarth('a249b98ec56b0a7e52d802c5e4fe57dffa7b3d0f',1);
 export default class CodeEditor extends React.Component {
     constructor(props) {
