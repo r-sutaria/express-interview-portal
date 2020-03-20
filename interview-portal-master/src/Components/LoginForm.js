@@ -1,5 +1,5 @@
 import React from "react";
-import {Col, Input, Label, Row,Form,Button} from "reactstrap";
+import {Col, Input, Label, Row,Form,Button,FormFeedback} from "reactstrap";
 export default function LoginForm(props) {
     const {onChangeUsernameLogin, onChangePasswordLogin, username, password} = props;
     return(
@@ -9,16 +9,17 @@ export default function LoginForm(props) {
                     <Label
                         for={'email'}
                     >
-                        <b>Email</b>
+                        <b>Username</b>
                     </Label>
                 </Col>
                 <Col md={10}>
                     <Input
                         id = {'email'}
-                        type = {'email'}
+                        type = {'text'}
                         name = {'email'}
                         value = {username}
                         onChange = {onChangeUsernameLogin}
+                        placeholder={'Email or username'}
                     />
                 </Col>
             </Row>
@@ -39,6 +40,9 @@ export default function LoginForm(props) {
                         onChange = {onChangePasswordLogin}
                     />
                 </Col>
+                {
+                    props.status === 500 ? <FormFeedback invalid>Invalid credentials.</FormFeedback> : <div/>
+                }
             </Row>
         </Form>
     )

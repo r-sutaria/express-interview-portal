@@ -14,9 +14,11 @@ export default class App extends React.Component{
 
     constructor(props) {
         super(props);
+        let user = localStorage.getItem('user');
+        if(typeof  user !== "string") user = null;
         this.state = {
             currentPage: <CodeEditor />,
-            user: null,
+            user: user,
             users: {
                 'user1' : 'password',
                 'user2' : 'password1'
@@ -47,21 +49,47 @@ export default class App extends React.Component{
         event.preventDefault();
     };
 
-    onClickLogin = (event,username,password) => {
-        const users = this.state.users;
-        if(users[username] !== undefined) {
-            if(password === users[username]) {
+    onClickLogin = (event,email,username,password) => {
+        // const users = this.state.users;
+        // if(users[username] !== undefined) {
+        //     if(password === users[username]) {
+        //         this.setState({
+        //             user: username
+        //         });
+        //         localStorage.setItem('user',username)
+        //     }
+        // }
+        fetch('/loginUser',{
+            method:'POST',
+            headers:{
+                'Accept':'application/json',
+                'Content-Type':'application/json'
+            },
+            body: JSON.stringify({
+                "username":username,
+                "email":email,
+                "password":password
+            })
+        }).then( response => {
+            return response.json()
+        }).then((response) => {
+            console.log(response);
+            if(response.length === 1){
                 this.setState({
-                    user: username
-                })
+                    user:username
+                });
+                console.log(response);
+                localStorage.setItem("user",username);
             }
-        }
+            return response.status;
+        }).catch( error => console.log(error.message));
     };
 
     onClickLogOut = (event) => {
         this.setState({
             user: null
         });
+        localStorage.removeItem('user');
         event.preventDefault();
     };
 

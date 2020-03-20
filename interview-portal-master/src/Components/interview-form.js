@@ -62,7 +62,8 @@ export default class ExperienceForm extends React.Component {
                 "likes":0,
                 "accepted":null,
                 "receivedOffer":data.receivedOffer,
-                "date":this.getDate()
+                "date":this.getDate(),
+                "reviewed":false
             })
         }).then( response => {
             console.log(response);
@@ -442,7 +443,9 @@ export default class ExperienceForm extends React.Component {
                             color={'dark'}
                             onClick={
                                 (event) => {
+                                    event.preventDefault();
                                     this.saveExperience();
+                                    window.location.href='/experiences';
                                 }
                             }
                         >

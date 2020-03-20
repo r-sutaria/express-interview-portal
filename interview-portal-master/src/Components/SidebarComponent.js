@@ -23,8 +23,14 @@ export default class Sidebar extends React.Component {
             height: window.innerHeight,
             loginOpen: false,
             signUpOpen: false,
+            email:'',
             username:'',
-            password:''
+            password:'',
+            confirmPassword:'',
+            name:'',
+            emailUnique:true,
+            usernameUnique:true,
+            status: 200
         }
     }
 
@@ -42,16 +48,75 @@ export default class Sidebar extends React.Component {
         })
     };
 
-    onChangeUsernameLogin = (event) => {
+    onChangeUsername = (event) => {
         this.setState({
             username: event.target.value
+        });
+        fetch('/username',{
+            method:'POST',
+            headers:{
+                'Accept':'application/json',
+                'Content-Type':'application/json'
+            },
+            body: JSON.stringify({
+                "username":event.target.value
+            })
+        }).then( response => {
+            // console.log(response);
+            return response.json()
+        }).then((response) => {
+            // console.log(this.state.username);
+            this.setState({usernameUnique: response.length === 0});
+            console.log(response);
+            if(response.status === 500) {
+                console.log("Error while connecting to database please check your internet connection");
+            }
+        }).catch( error => console.log(error.message));
+        event.preventDefault();
+    };
+
+    onChangePassword = (event) => {
+        this.setState({
+            password: event.target.value
         });
         event.preventDefault();
     };
 
-    onChangePasswordLogin = (event) => {
+    onChangeConfirmPassword = (event) => {
         this.setState({
-            password: event.target.value
+            confirmPassword: event.target.value
+        });
+        event.preventDefault();
+    };
+    onChangeEmail = (event) => {
+        this.setState({
+            email:event.target.value
+        });
+        fetch('/email',{
+            method:'POST',
+            headers:{
+                'Accept':'application/json',
+                'Content-Type':'application/json'
+            },
+            body: JSON.stringify({
+                "email":event.target.value
+            })
+        }).then( response => {
+            // console.log(response);
+            return response.json()
+        }).then((response) => {
+            this.setState({emailUnique: response.length === 0});
+            console.log(response);
+            if(response.status === 500) {
+                console.log("Error while connecting to database please check your internet connection");
+            }
+        }).catch( error => console.log(error.message));
+        event.preventDefault();
+    };
+
+    onChangeName = (event) => {
+        this.setState({
+            name:event.target.value
         });
         event.preventDefault();
     };
@@ -202,10 +267,13 @@ export default class Sidebar extends React.Component {
                                 <ModalHeader toggle={this.toggleLogin}>Login</ModalHeader>
                                 <ModalBody>
                                     <LoginForm
-                                        onChangeUsernameLogin={this.onChangeUsernameLogin}
-                                        onChangePasswordLogin={this.onChangePasswordLogin}
+                                        onChangeUsernameLogin={this.onChangeUsername}
+                                        onChangePasswordLogin={this.onChangePassword}
+                                        onChangeEmail={this.onChangeEmail}
                                         username={this.state.username}
                                         passsword={this.state.password}
+                                        email={this.state.email}
+                                        status={this.state.status}
                                     />
                                 </ModalBody>
                                 <ModalFooter>
@@ -223,9 +291,10 @@ export default class Sidebar extends React.Component {
                                     </Button>
                                     <Button
                                         color={'success'}
-                                        onClick={(event) =>
-                                            this.props.onClickLogin(event, this.state.username, this.state.password)
-                                        }
+                                        onClick={(event) => {
+                                            const status = this.props.onClickLogin(event,this.state.email,this.state.username,this.state.password);
+                                            this.setState({status});
+                                        }}
                                     >
                                         Login
                                     </Button>
@@ -237,7 +306,20 @@ export default class Sidebar extends React.Component {
                             >
                                 <ModalHeader toggle={this.toggleSignUp}>Sign Up</ModalHeader>
                                 <ModalBody>
-                                    <SignUpForm/>
+                                    <SignUpForm
+                                        onChangeEmail={this.onChangeEmail}
+                                        onChangeUsername={this.onChangeUsername}
+                                        onChangeName={this.onChangeName}
+                                        onChangePassword={this.onChangePassword}
+                                        onChangeConfirmPassword={this.onChangeConfirmPassword}
+                                        email={this.state.email}
+                                        username={this.state.username}
+                                        name={this.state.name}
+                                        password={this.state.password}
+                                        confirmPassword={this.state.confirmPassword}
+                                        emailUnique={this.state.emailUnique}
+                                        usernameUnique={this.state.usernameUnique}
+                                    />
                                 </ModalBody>
                                 <ModalFooter>
                                     <Button
@@ -257,6 +339,36 @@ export default class Sidebar extends React.Component {
                                         onClick={
                                             (event) => {
                                                 event.preventDefault();
+                                                if(this.state.emailUnique && this.state.usernameUnique && this.state.password === this.state.confirmPassword && !this.state.username.includes(' ')) {
+                                                    fetch('/registerUser', {
+                                                        method: 'POST',
+                                                        headers: {
+                                                            'Accept': 'application/json',
+                                                            'Content-Type': 'application/json'
+                                                        },
+                                                        body: JSON.stringify({
+                                                            _id: this.state.username,
+                                                            email: this.state.email,
+                                                            name: this.state.name,
+                                                            password: this.state.password
+                                                        })
+                                                    }).then(response => {
+                                                        // console.log(response);
+                                                        return response.json()
+                                                    }).then((response) => {
+                                                        const experience = response[0];
+                                                        this.setState({
+                                                            experience,
+                                                            loading: false,
+                                                            show: experience.accepted !== false
+                                                        });
+                                                        console.log(experience);
+                                                        if (response.status === 500) {
+                                                            console.log("Error while connecting to database please check your internet connection");
+                                                        }
+                                                    }).catch(error => console.log(error.message));
+                                                    this.props.onClickLogin(event,this.state.email,this.state.username,this.state.password);
+                                                }
                                             }
                                         }
                                     >

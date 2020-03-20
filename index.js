@@ -106,6 +106,92 @@ app.post('/getAnswers',(req,res,next) => {
     });
 });
 
+app.post('/username',(req,res,next) => {
+   const data = req.body;
+    MongoClient.connect(uri,function(err,client){
+        if(err)
+            console.log("Error while connecting to DB");
+        else{
+            const collection = client.db("Main").collection("Register");
+            // console.log(data.username);
+            let cursor=collection.find({_id:data.username});
+            cursor.toArray((err,resp)=>{
+                if(err) throw err;
+                res.status(200).send(resp);
+                client.close();
+            })
+        }
+    });
+});
+
+app.post('/registerUser',(req,res,next) => {
+    const data=req.body;
+    MongoClient.connect(uri,function(err,client){
+        if(err){
+            res.status(500).send("Unable to connect to database");
+        }else{
+            const collection=client.db("Main").collection("Register");
+            data.type = "N";
+            data.notification = [];
+            data.review = [];
+            collection.insertOne(data,function(err,resp){
+                if(err) {
+                    res.status(500).send("Error");
+                    console.log(err);
+                }
+                else
+                    res.status(200).send("Inserted");
+
+            });
+            client.close();
+        }
+    });
+});
+
+app.post('/loginUser',(req,res) => {
+    const data = req.body;
+    MongoClient.connect(uri,function(err,client){
+        if(err)
+            console.log("Error while connecting to DB");
+        else{
+            const collection = client.db("Main").collection("Register");
+            let cursor=collection.find({email:data.email,password:data.password});
+            cursor.toArray((err,resp)=>{
+                if(err) throw err;
+                if(resp.length === 1) res.status(200).send(resp);
+                else{
+                    cursor=collection.find({_id:data.username,password:data.password});
+                    cursor.toArray((err,resp)=>{
+                        if(err) throw err;
+                        console.log(resp.length);
+                        if(resp.length === 1) res.status(200).send(resp);
+                        else res.status(500).send("Invalid credentials");
+                    });
+                }
+                client.close();
+            });
+        }
+    });
+});
+
+app.post('/email',(req,res,next) => {
+    const data = req.body;
+    MongoClient.connect(uri,function(err,client){
+        if(err)
+            console.log("Error while connecting to DB");
+        else{
+            const collection = client.db("Main").collection("Register");
+            let cursor=collection.find({email:data.email});
+            cursor.toArray((err,resp)=>{
+                if(err) throw err;
+                res.status(200).send(resp);
+                client.close();
+            })
+        }
+    });
+});
+
+
 app.post('/updateExperience',(req,res,next) => {
     const data = req.body;
     console.log('Update Experience request.');

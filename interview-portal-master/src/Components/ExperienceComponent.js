@@ -8,7 +8,8 @@ export default class ExperienceList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            experiences: []
+            experiences: [],
+            loading: true
         };
         this.getExperiences();
     }
@@ -18,8 +19,8 @@ export default class ExperienceList extends React.Component {
             .then(res => res.json())
             .then(res => {
                 let experiences = res;
-                this.setState({experiences});
-                console.log(experiences);
+                this.setState({experiences,loading:false});
+                // console.log(experiences);
             })
             .catch(err => {
                 console.log(err);
@@ -35,6 +36,9 @@ export default class ExperienceList extends React.Component {
 
     render() {
         const {experiences} = this.state;
+        if(this.state.loading){
+            return <img src={'/loading.gif'} alt={'Loading..'} style={{position:'absolute',top:'50%',left:'50%'}}/>
+        }
         return(
             <div>
                 <div className={'border-bottom'}>
@@ -83,7 +87,7 @@ export default class ExperienceList extends React.Component {
                 {/*<ExperienceCard experience={experiences[0]} onSaveClick={this.onSaveClick}/>*/}
                 {
                     experiences.map(experience => {
-                        console.log(experience);
+                        // console.log(experience);
                         return(experience.accepted  ? <ExperienceCard key={experience._id} experience={experience} link={'/experience2'} onSaveClick={this.onSaveClick}/>
                             : <div />
                         )
