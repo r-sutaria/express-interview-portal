@@ -60,7 +60,7 @@ export default class ExperienceForm extends React.Component {
                 "rounds":data.rounds,
                 "author":data.author,
                 "likes":0,
-                "accepted":false,
+                "accepted":null,
                 "receivedOffer":data.receivedOffer,
                 "date":this.getDate()
             })

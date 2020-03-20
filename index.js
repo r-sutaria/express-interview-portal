@@ -105,6 +105,28 @@ app.post('/getAnswers',(req,res,next) => {
         }
     });
 });
+
+app.post('/updateExperience',(req,res,next) => {
+    const data = req.body;
+    console.log('Update Experience request.');
+    MongoClient.connect(uri,(err,client) => {
+        if(err){
+            console.log(err);
+        }
+        else{
+            const collection = client.db("Main").collection("Experience");
+            collection.updateOne({_id:ObjectId(data.id)},{$set:{accepted:data.accepted}},(err,resp) => {
+                if(err){
+                    res.status(500).send(err);
+                }
+                else{
+                    res.status(200).send(resp);
+                }
+                client.close();
+            });
+        }
+    });
+});
 app.get('/experiences',(req,res,next) => {
     console.log('Experience Get Request');
     MongoClient.connect(uri,function(err,client){

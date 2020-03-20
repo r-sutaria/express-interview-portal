@@ -26,7 +26,7 @@ export default function ExperienceCard(props) {
             <div className={'ml-3 mb-3'}>
                 {`Submission Date: ${experience.date}`}
                 <br/>
-                {`Rounds: ${experience.n_rounds}`}
+                {`Rounds: ${experience.rounds.length}`}
                 <br/>
                 {`Received Offer:  `}{ experience.receivedOffer ? <span className={'text-success ml-1'}><FaCheckCircle /></span> : <span className={'text-danger ml-1'}><FaTimesCircle /></span>}
                 <br/>

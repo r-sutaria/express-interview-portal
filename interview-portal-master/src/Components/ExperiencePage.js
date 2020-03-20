@@ -9,7 +9,8 @@ export default class ExperiencePage extends React.Component {
         this.state = {
             experience: {},
             id:this.props.match.params.id,
-            loading: true
+            loading: true,
+            show: true
         };
         this.getExperiences();
     }
@@ -30,7 +31,7 @@ export default class ExperiencePage extends React.Component {
             return response.json()
         }).then((response) => {
             const experience = response[0];
-            this.setState({experience, loading: false});
+            this.setState({experience, loading: false, show: experience.accepted !== false});
             console.log(experience);
             if(response.status === 500) {
                 console.log("Error while connecting to database please check your internet connection");
@@ -63,6 +64,11 @@ export default class ExperiencePage extends React.Component {
 
     render() {
         const {experience} = this.state;
+        if(!this.state.show){
+            return(
+              <h3>This experience has been rejected by the admin.</h3>
+            );
+        }
         return (
             this.state.loading ? <img src={'/loading.gif'} alt={'Loading..'} style={{position:'absolute',top:'50%',left:'50%'}}/>:
             <div className={'container bg-white'}>
@@ -154,15 +160,24 @@ export default class ExperiencePage extends React.Component {
                                     className={'mr-2 mb-2'}
                                     color={'success'}
                                     size={'sm'}
-                                    onMouseDown={(e) => {
-                                        e.preventDefault();
-                                        const exp = experience;
-                                        exp.accepted = 'yes';
-                                        this.setState({
-                                            experience: exp
+                                    type={'Submit'}
+                                    onClick={(e) => {
+                                        fetch('/updateExperience', {
+                                            method: 'POST',
+                                            headers: {
+                                                'Accept': 'application/json',
+                                                'Content-Type': 'application/json'
+                                            },
+                                            body: JSON.stringify({
+                                                id:this.props.match.params.id,
+                                                accepted: true
+                                            })
                                         })
-                                    }
-                                    }
+                                            .then(resp => resp.json())
+                                            .then(resp => console.log(resp))
+                                            .then(err => console.log(err));
+                                            window.location.reload();
+                                    }}
                                 >
                                     Accept
                                 </Button>
@@ -173,7 +188,7 @@ export default class ExperiencePage extends React.Component {
                                     onMouseDown={(e) => {
                                         e.preventDefault();
                                         const exp = experience;
-                                        exp.accepted = 'no';
+                                        exp.accepted = false;
                                         this.setState({
                                             experience: exp
                                         })
@@ -185,7 +200,7 @@ export default class ExperiencePage extends React.Component {
                             </div>
                     }
                     {
-                        !experience.accepted ? <div>
+                        experience.accepted === false ? <div>
                             <div className={'pt-2 pl-4'}>
                                 <Input
                                     type={'textarea'}
@@ -195,7 +210,26 @@ export default class ExperiencePage extends React.Component {
                                 />
                             </div>
                             <div className={'pt-2 pl-4 float-right'}>
-                                <Button color={'dark'} size={'sm'}>
+                                <Button color={'dark'} size={'sm'}
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        fetch('/updateExperience', {
+                                            method: 'POST',
+                                            headers: {
+                                                'Accept': 'application/json',
+                                                'Content-Type': 'application/json'
+                                            },
+                                            body: JSON.stringify({
+                                                id:this.props.match.params.id,
+                                                accepted: experience.accepted
+                                            })
+                                        })
+                                            .then(resp => resp.json())
+                                            .then(resp => console.log(resp))
+                                            .then(err => console.log(err));
+                                        window.location.reload();
+                                    }}
+                                >
                                     Submit
                                 </Button>
                             </div>
@@ -208,4 +242,4 @@ export default class ExperiencePage extends React.Component {
         );
     }
 
-}
+};
