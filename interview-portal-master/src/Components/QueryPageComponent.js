@@ -1,6 +1,6 @@
 import React from "react";
 import QueryCard from "./QueryCard";
-import {Link} from "react-router-dom";
+
 import {Modal,ModalHeader,ModalFooter,ModalBody,Button,Input} from 'reactstrap';
 export default class QueryPageComponent extends React.Component {
     constructor(props) {

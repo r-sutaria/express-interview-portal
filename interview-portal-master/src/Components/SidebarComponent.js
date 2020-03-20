@@ -1,14 +1,6 @@
 import React from 'react';
 import {
-    Nav,
-    NavItem,
-    NavLink,
-    NavbarToggler,
-    Navbar,
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem,
-    UncontrolledDropdown, Modal, ModalHeader, ModalBody, ModalFooter, Button
+    Modal, ModalHeader, ModalBody, ModalFooter, Button
 } from 'reactstrap';
 import {Link} from 'react-router-dom';
 import {FiLogOut,AiFillNotification,FaBookmark,AiFillEdit,FaQuestionCircle,MdHistory,AiOutlineCode,IoMdStats,FiLogIn,FaUserCircle,MdRateReview} from 'react-icons/all';

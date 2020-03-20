@@ -1,32 +1,18 @@
 import React from "react";
-import SidebarComponent from "./SidebarComponent";
 import './NavbarComponent.css';
 import {Link} from 'react-router-dom';
 import {AiOutlineMenu} from "react-icons/all";
 import {
-    Collapse,
     Nav,
     Navbar,
     NavbarBrand,
-    NavbarToggler,
     NavItem,
-    NavLink,
     Button,
-    Modal,
-    ModalBody,
-    ModalFooter,
-    ModalHeader,
     Form,
     Input,
     InputGroup,
     InputGroupAddon,
-    UncontrolledDropdown,
-    DropdownMenu,
-    DropdownItem,
-    DropdownToggle
 } from "reactstrap";
-import LoginForm from "./LoginForm";
-import SignUpForm from "./SignUpForm";
 import {FaSearch} from "react-icons/all";
 
 export default class NavbarComponent extends React.Component {

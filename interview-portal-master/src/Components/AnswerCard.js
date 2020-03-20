@@ -1,5 +1,4 @@
 import React from 'react';
-import {Editor} from "draft-js";
 import {FaThumbsUp, FaThumbsDown, FaRegThumbsUp, FaRegThumbsDown} from "react-icons/all";
 import AnswerProfileCard from "./AnswerProfleCard";
 import {Button} from "reactstrap";

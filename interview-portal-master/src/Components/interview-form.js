@@ -1,5 +1,5 @@
 import React from "react";
-import {Form,FormGroup,Label,Input,Button,Row,Col,FormText,Card,CustomInput} from 'reactstrap';
+import {Form,FormGroup,Label,Input,Button,Row,Col,CustomInput} from 'reactstrap';
 import RoundCard from "./RoundCard";
 export default class ExperienceForm extends React.Component {
     constructor(props) {

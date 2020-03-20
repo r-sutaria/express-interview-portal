@@ -1,6 +1,5 @@
 import React from 'react';
 import PracticeCard from "./PracticeCard";
-import {Row,Col} from 'reactstrap'
 export default class PracticePage extends React.Component {
     constructor(props) {
         super(props);

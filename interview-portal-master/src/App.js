@@ -6,10 +6,8 @@ import ExperienceList from "./Components/ExperienceComponent";
 import BlogList from "./Components/BlogsList";
 import Sidebar from "./Components/SidebarComponent";
 import CodeEditor from "./Components/CodeEditor";
-import PlacementReport from "./Components/PlacementReport";
 import Main from './Components/Main';
-import MyEditor from "./Components/MyEditor";
-import {NavbarToggler,Collapse,Navbar,Row,Col} from 'reactstrap';
+import {Collapse} from 'reactstrap';
 export default class App extends React.Component{
 
     constructor(props) {

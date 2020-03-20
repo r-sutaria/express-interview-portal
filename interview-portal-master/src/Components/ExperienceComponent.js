@@ -1,7 +1,6 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-import {FaCheckCircle,FaTimesCircle,FaRegStar,FaStar,FaThumbsUp} from "react-icons/all";
-import {Button,Row,Col,Input,Label} from "reactstrap";
+import {Row,Col,Input,Label} from "reactstrap";
 import ExperienceCard from "./ExperienceCard";
 export default class ExperienceList extends React.Component {
 

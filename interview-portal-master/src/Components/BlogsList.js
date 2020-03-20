@@ -1,13 +1,9 @@
 import React from "react";
 import AnswerBox from "./AnswerBox";
-import {Card,Button,ButtonDropdown,DropdownToggle,DropdownItem,DropdownMenu,Row,Col} from "reactstrap";
+import {Card,Button} from "reactstrap";
 import {FaComment,FaEllipsisH,FaFacebookF,FaTwitter,AiFillEdit,FaStar,MdReport,AiOutlineStop} from "react-icons/all";
-import {Editor,EditorState,convertToRaw,convertFromRaw,CompositeDecorator} from 'draft-js';
-import CodeEditor from "./CodeEditor";
 import '../Images/pikachu.jpg';
 import AnswerCard from "./AnswerCard";
-import {Link} from "react-router-dom";
-import {edit} from "ace-builds";
 
 
 export default class BlogList extends React.Component {

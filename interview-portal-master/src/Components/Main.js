@@ -1,10 +1,8 @@
 import React from "react";
 import {Switch,Route} from 'react-router';
 import ExperienceForm from "./interview-form";
-import NavbarComponent from "./NavbarComponent";
 import ExperienceList from "./ExperienceComponent";
 import BlogList from "./BlogsList";
-import Sidebar from "./SidebarComponent";
 import CodeEditor from "./CodeEditor";
 import PlacementReport from "./PlacementReport";
 import ExperiencePage from "./ExperiencePage";
@@ -15,7 +13,6 @@ import SavedPage from "./SavedPage";
 import PracticePage from "./PracticePage";
 import LoginPage from "./LoginPage";
 import ReviewPage from "./ReviewPage";
-import AnswerBox from "./AnswerBox";
 import UserPage from "./UserPage";
 export default function Main() {
     return(

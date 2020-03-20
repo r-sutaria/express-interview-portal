@@ -1,8 +1,7 @@
 import React from "react";
 import AceEditor from "react-ace";
-import {Card, Input, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem,Button} from 'reactstrap';
+import {Input, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem,Button} from 'reactstrap';
 import {MdRestore} from "react-icons/all";
-import axios from 'axios';
 import "ace-builds/src-noconflict/mode-java";
 import "ace-builds/src-noconflict/mode-c_cpp";
 import "ace-builds/src-noconflict/mode-python";
@@ -13,7 +12,7 @@ import "ace-builds/src-noconflict/theme-solarized_dark";
 import "ace-builds/src-noconflict/theme-terminal";
 import "ace-builds/src-noconflict/theme-xcode";
 import HackerEarth from 'hackerearth-node';
-let he = new HackerEarth('a249b98ec56b0a7e52d802c5e4fe57dffa7b3d0f',1);
+// let he = new HackerEarth('a249b98ec56b0a7e52d802c5e4fe57dffa7b3d0f',1);
 export default class CodeEditor extends React.Component {
     constructor(props) {
         super(props);

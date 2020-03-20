@@ -1,5 +1,5 @@
 import React from "react";
-import {Form,FormGroup,Input,Label,Row,Col} from 'reactstrap';
+import {Form,FormGroup,Input} from 'reactstrap';
 export default class LoginPage extends React.Component {
     constructor(props) {
         super(props);

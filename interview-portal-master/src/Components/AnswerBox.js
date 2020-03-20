@@ -2,7 +2,7 @@ import React from "react";
 import {CompositeDecorator, Editor as DraftEditor, EditorState, RichUtils} from 'draft-js';
 import {Button,Input,Col,Row} from 'reactstrap';
 import styleMap from "../Constants/StyleMap";
-import {FaAlignLeft,FaAlignRight,MdLink,GoListUnordered,GoListOrdered} from "react-icons/all";
+import {MdLink,GoListUnordered,GoListOrdered} from "react-icons/all";
 import AnswerProfileCard from "./AnswerProfleCard";
 import 'draft-js/dist/Draft.css';
 
