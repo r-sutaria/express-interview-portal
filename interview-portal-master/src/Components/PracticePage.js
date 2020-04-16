@@ -1,49 +1,86 @@
 import React from 'react';
+import Chart from 'chart.js';
+import PracticeList from "./PracticeList";
+import {Link} from 'react-router-dom';
 import PracticeCard from "./PracticeCard";
 export default class PracticePage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            problems: [
-                {
-                    id:'1',
-                    title:'Breaking the record',
-                    difficulty:'medium',
-                    successRate:100,
-                    saved:false
-                },
-                {
-                    id:'2',
-                    title:'Breaking the record',
-                    difficulty:'medium',
-                    successRate:100,
-                    saved:true
+            myChart: null
+        };
+    }
+
+    componentDidMount() {
+        const ctx = document.getElementById('myChart');
+        const myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                datasets: [{
+                    label: '# of Votes',
+                    data: [12, 19, 3, 5, 2, 3],
+                    borderColor: 'red',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
                 }
-            ]
-        }
+            }
+        });
     }
 
     render() {
         return (
             <div>
-                {this.state.problems.map(problem => {
-                    const onSaveClick = (e) => {
-                        const problems = this.state.problems.map((p) => {
-                            let p1 = p;
-                            p1.saved = p1.id === problem.id ? !p1.saved : p1.saved;
-                            return p1;
-                        });
-                        this.setState({ problems });
-                        e.preventDefault();
-                    };
-                    return <PracticeCard
-                        title={problem.title}
-                        difficulty={problem.difficulty}
-                        successRate={problem.successRate}
-                        saved={problem.saved}
-                        onSaveClick={onSaveClick}
-                    />
-                })}
+                <div className={'float-left border-right border-dark'} style={{width:'50%',minHeight:'100%',marginTop:'-7px'}}>
+                    <PracticeList/>
+                    <PracticeList/>
+                    <PracticeList/>
+                    <PracticeList/>
+                </div>
+                <div className={'float-left'} style={{width:'50%'}}>
+                    <div className="chart-container" style={{position: 'relative', height:'25vh', width:'100%'}}>
+                        <canvas id="myChart" className={'border-bottom border-dark'}/>
+                        <div>
+                            <div align={'center'}>
+                                <h5 style={{justifyContent:'center'}}>Coding Preparation for Companies</h5>
+                            </div>
+                            <div className={'ml-2'}>
+                                <div style={{width:'97%',backgroundColor:'#e3e4e6'}} className={'m-1 mb-2 p-2 border rounded border-dark'}>
+                                    <Link to={'/prepare/amazon'}>Amazon</Link>
+                                    <div>
+                                        Topics to prepare for Amazon: DP, Binary Search, Linked List
+                                    </div>
+                                </div>
+                                <div style={{width:'97%',backgroundColor:'#e3e4e6'}} className={'m-1 mb-2 p-2 border rounded border-dark'}>
+                                    <Link to={'/prepare/amazon'}>Microsoft</Link>
+                                    <div>
+                                        Topics to prepare for Microsoft: DP, Binary Search, Linked List
+                                    </div>
+                                </div>
+                                <div style={{width:'97%',backgroundColor:'#e3e4e6'}} className={'m-1 mb-2 p-2 border rounded border-dark'}>
+                                    <Link to={'/prepare/amazon'}>Samsung</Link>
+                                    <div>
+                                        Topics to prepare for Samsung: DP, Binary Search, Linked List
+                                    </div>
+                                </div>
+                                <div style={{width:'97%',backgroundColor:'#e3e4e6'}} className={'m-1 mb-2 p-2 border rounded border-dark'}>
+                                    <Link to={'/prepare/amazon'}>Google</Link>
+                                    <div>
+                                        Topics to prepare for Google: DP, Binary Search, Linked List
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         );
     }

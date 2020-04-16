@@ -98,7 +98,7 @@ export default class BlogList extends React.Component {
         </div>;
         this.setState({
             answers: [...this.state.answers,
-                {id: this.state.answers.length,answer: divElement, helpful: 'none'}
+                {id: this.state.answers.length,answer: divElement, helpful: 'none',author:localStorage.getItem('user')}
             ],
             answer: !this.state.answer
         });

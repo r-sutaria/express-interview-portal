@@ -163,7 +163,6 @@ app.post('/loginUser',(req,res) => {
                     cursor=collection.find({_id:data.username,password:data.password});
                     cursor.toArray((err,resp)=>{
                         if(err) throw err;
-                        console.log(resp.length);
                         if(resp.length === 1) res.status(200).send(resp);
                         else res.status(500).send("Invalid credentials");
                     });

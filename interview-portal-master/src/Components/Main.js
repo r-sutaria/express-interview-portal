@@ -10,6 +10,7 @@ import QueryPageComponent from "./QueryPageComponent";
 import NotificationComponent from "./NotificationComponent";
 import SearchPage from "./SearchPage";
 import SavedPage from "./SavedPage";
+import PracticeList from "./PracticeList";
 import PracticePage from "./PracticePage";
 import LoginPage from "./LoginPage";
 import ReviewPage from "./ReviewPage";
