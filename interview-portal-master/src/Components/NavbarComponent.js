@@ -72,18 +72,19 @@ export default class NavbarComponent extends React.Component {
                             <NavbarBrand
                                 className={'text-left'}
                                 style={{minWidth:'20%'}}
+                                href={'/'}
                             >
                                 <span className={'text-white mr-3'} onMouseDown={this.props.onSidebarToggleClick} style={{marginLeft:'-10px'}}>
                                     <AiOutlineMenu size={20}/>
                                 </span>
-                                <Link
+                                <span
                                     to={'/'}
                                     className={'text-white'}
                                     style={{textDecoration: 'none'}}
                                     onMouseDown = {(e) => e.preventDefault()}
                                 >
                                     InterviewPortal
-                                </Link>
+                                </span>
                             </NavbarBrand>
                         </div>
                         {/*<div className="d-flex flex-grow-1 float-right">*/}

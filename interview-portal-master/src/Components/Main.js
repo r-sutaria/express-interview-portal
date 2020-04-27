@@ -10,17 +10,18 @@ import QueryPageComponent from "./QueryPageComponent";
 import NotificationComponent from "./NotificationComponent";
 import SearchPage from "./SearchPage";
 import SavedPage from "./SavedPage";
-import PracticeList from "./PracticeList";
 import PracticePage from "./PracticePage";
 import LoginPage from "./LoginPage";
 import ReviewPage from "./ReviewPage";
 import UserPage from "./UserPage";
+import Prepare from "./Prepare";
 export default function Main() {
     return(
     <Switch>
         <Route exact path={'/'} component={ExperienceForm} />
         <Route exact path={'/practice/problem1'} component={CodeEditor} />
         <Route exact path={'/practice'} component={PracticePage} />
+        <Route exact path={'/prepare/:company'} component={Prepare} />
         <Route exact path={'/queries'} component={QueryPageComponent}/>
         <Route exact path={'/experiences'} component={ExperienceList} />
         <Route exact path={'/experiences/:id'} component={ExperiencePage} />

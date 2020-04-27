@@ -34,11 +34,11 @@ export default class UserPage extends React.Component {
     renderItems = (item,index) => {
         const ret = index%2 === 0 ?
             <div className={'bg-light col-form-label'} style={{height:50}}>
-                <a href={'#'} className={'text-dark'}><h6>{item}</h6></a>
+                <a href={'/practice'} className={'text-dark'}><h6>{item}</h6></a>
             </div>
             :
                 <div className={'col-form-label'} style={{height:50}}>
-                    <a href={'#'} className={'text-dark'}><h6>{item}</h6></a>
+                    <a href={'/practice'} className={'text-dark'}><h6>{item}</h6></a>
                 </div>;
         return(ret);
     };
@@ -54,7 +54,7 @@ export default class UserPage extends React.Component {
             <div>
                 <div className={'row'}>
                     <div className={'col-auto'}>
-                        <img src={'/pikachu.jpg'} alt={'Profile Picture'} className={'border border-dark mr-2'} style={{width:128,height:128}}/>
+                        <img src={'/pikachu.jpg'} alt={'Profile'} className={'border border-dark mr-2'} style={{width:128,height:128}}/>
                     </div>
                     <div className={'col-10'}>
                         <h4>

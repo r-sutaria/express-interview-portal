@@ -37,8 +37,9 @@ export default class QueryPageComponent extends React.Component {
             <div>
                 <div className={'border-bottom'}>
                     <h5>
-                        <a
-                            href={'#'}
+                        <Button
+                            size={'md'}
+                            color={'link'}
                             onMouseDown={event => {
                                 event.preventDefault();
                                 this.setState({
@@ -47,7 +48,7 @@ export default class QueryPageComponent extends React.Component {
                             }}
                         >
                             Ask your Question
-                        </a>
+                        </Button>
                     </h5>
                 </div>
                 <Modal
@@ -59,7 +60,6 @@ export default class QueryPageComponent extends React.Component {
                     </ModalHeader>
                     <ModalBody>
                         <Input
-                            type={'textarea'}
                             type={'textarea'}
                             name={'text'}
                             rows={5}
