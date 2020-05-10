@@ -147,12 +147,12 @@ export default class App extends React.Component{
                                 </Collapse>
                             </div>
                             <div style={ {marginLeft:200}} className={'pt-2 pl-3'}>
-                                <Main />
+                                <Main user={this.state.user}/>
                             </div>
                         </div>
                     :
                         <div className={'container pt-2'} style={{marginTop:this.state.navbarHeight}}>
-                            <Main />
+                            <Main user={this.state.user}/>
                         </div>
                 }
             </div>

@@ -5,7 +5,7 @@ import {FaCheckCircle, FaRegStar, FaStar, FaThumbsUp, FaTimesCircle} from "react
 
 export default function ExperienceCard(props) {
     const {experience} = props;
-    console.log(experience);
+    // console.log(experience);
     return(
         <div key={experience._id} style={{backgroundColor:'#e3e4e6'}} className={'border border-dark rounded mr-5 mt-2'}>
             <Row>
@@ -24,7 +24,7 @@ export default function ExperienceCard(props) {
                 </Col>
             </Row>
             <div className={'ml-3 mb-3'}>
-                {`Submission Date: ${experience.date}`}
+                {`Submission Date: ${experience.date.substring(0,10)}`}
                 <br/>
                 {`Rounds: ${experience.rounds.length}`}
                 <br/>

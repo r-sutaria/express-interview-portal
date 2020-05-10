@@ -8,7 +8,8 @@ export default class ExperienceList extends React.Component {
         super(props);
         this.state = {
             experiences: [],
-            loading: true
+            loading: true,
+            sort: "date"
         };
         this.getExperiences();
     }
@@ -17,7 +18,9 @@ export default class ExperienceList extends React.Component {
         fetch('/experiences')
             .then(res => res.json())
             .then(res => {
-                let experiences = res;
+                let experiences = res.sort(function(a,b) {
+                    return a.date.localeCompare(b.date);
+                });
                 this.setState({experiences,loading:false});
                 // console.log(experiences);
             })
@@ -35,6 +38,7 @@ export default class ExperienceList extends React.Component {
 
     render() {
         const {experiences} = this.state;
+        // console.log(experiences);
         if(this.state.loading){
             return <img src={'/loading.gif'} alt={'Loading..'} style={{position:'absolute',top:'50%',left:'50%'}}/>
         }
@@ -65,17 +69,38 @@ export default class ExperienceList extends React.Component {
                                 name={'select'}
                                 id={'sort-by'}
                                 style={{width:'30%'}}
+                                value={this.state.sort}
+                                onChange={(e) => {
+                                    let experiences = this.state.experiences.sort(function (a,b) {
+                                        if (e.target.value === "date") {
+                                            return a.date.localeCompare(b.date);
+                                        }
+                                        if (e.target.value === "author") {
+                                            return a.author.localeCompare(b.author);
+                                        }
+                                        if (e.target.value === "company") {
+                                            return a.company.localeCompare(b.company);
+                                        }
+                                        if (e.target.value === "helpfulness") {
+                                            return a.likes - b.likes;
+                                        }
+                                    });
+                                    this.setState({
+                                        sort:e.target.value,
+                                        experiences
+                                    });
+                                }}
                             >
-                                <option>
+                                <option value={'date'}>
                                     Submission Date
                                 </option>
-                                <option>
+                                <option value={'company'}>
                                     Company
                                 </option>
-                                <option>
+                                <option value={'author'}>
                                     Author
                                 </option>
-                                <option>
+                                <option value={'helpfulness'}>
                                     Helpfulness
                                 </option>
                             </Input>

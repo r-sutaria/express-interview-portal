@@ -22,8 +22,12 @@ export default class CodeEditor extends React.Component {
             fontSize: 16,
             height: '400px',
             width: '900px',
-            language: 'C'
-        }
+            language: 'C',
+            loaded: false,
+            description: <div/>,
+            title: <div/>
+        };
+        // console.log(this.props);
     }
     mode_map = {
         'C' : 'c_cpp',
@@ -37,65 +41,92 @@ export default class CodeEditor extends React.Component {
         this.setState({value})
     };
 
+    componentDidMount() {
+        if(!this.state.loaded) {
+            const id = this.props.match.params.id;
+            fetch('/practice/'+id)
+                .then(res => res.json())
+                .then(res => {
+                    console.log(res);
+                    const divElement = <div dangerouslySetInnerHTML={{__html:
+                        res.description}}/>;
+                    const titleElement = <div dangerouslySetInnerHTML={{__html:
+                        res.title}}/>;
+                       this.setState({
+                           description: divElement,
+                           title: titleElement,
+                           loaded: true
+                       })
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        }
+    }
+
     render() {
         return(
             <div className={'container'}>
                 <div className={'ml-3 mt-2'}>
                     <div className={'mb-5'}>
-                        <h3>Breaking the Records</h3>
-                        <span>
-                            Maria plays college basketball and wants to go pro.
-                            Each season she maintains a record of her play.
-                            She tabulates the number of times she breaks her season record for most points and least points in a game.
-                            Points scored in the first game establish her record for the season,
-                            and she begins counting from there.
-                        </span>
-                        <br/><br/>
-                        <h4>
-                            Input Format
-                        </h4>
-                        <span>
-                            The first line contains an integer <b>n</b>, the number of games.
-                            <br/>
-                            The second line contains <b>n</b> space-separated integers describing the respective values of <b>score[0],score[1],...,score[n-1]</b>.
-                        </span>
-                        <br/><br/>
-                        <h4>
-                            Constraints
-                        </h4>
-                        <span>
-                            <ul>
-                                <li>
-                                    <b>{'1 <= n <= 1000'}</b>
-                                </li>
-                                <li>
-                                    <b>{'0 <= score[i] <= 10^18'}</b>
-                                </li>
-                            </ul>
-                        </span>
-                        <br/>
-                        <h4>
-                            Output Format
-                        </h4>
-                        <span>
-                            Print two space-separated integers describing the respective numbers of times
-                            her best (highest) score increased and her worst (lowest) score decreased.
-                        </span>
-                        <br/><br/>
-                        <h4>
-                            Sample Input #1
-                        </h4>
-                        <div className={'border border-dark rounded pt-2 pl-3 pb-2'} style={{width: this.state.width,backgroundColor:'#c1c1c1'}}>
-                            9 <br/>
-                            10 5 20 20 4 5 2 25 1
-                        </div>
-                        <br/><br/>
-                        <h4>
-                            Sample Output #1
-                        </h4>
-                        <div className={'border border-dark rounded pt-2 pl-3 pb-2'} style={{width: this.state.width,backgroundColor:'#c1c1c1'}}>
-                            2 4
-                        </div>
+                        {/*<h3>Breaking the Records</h3>*/}
+                        {/*<span>*/}
+                        {/*    Maria plays college basketball and wants to go pro.*/}
+                        {/*    Each season she maintains a record of her play.*/}
+                        {/*    She tabulates the number of times she breaks her season record for most points and least points in a game.*/}
+                        {/*    Points scored in the first game establish her record for the season,*/}
+                        {/*    and she begins counting from there.*/}
+                        {/*</span>*/}
+                        {/*<br/><br/>*/}
+                        {/*<h4>*/}
+                        {/*    Input Format*/}
+                        {/*</h4>*/}
+                        {/*<span>*/}
+                        {/*    The first line contains an integer <b>n</b>, the number of games.*/}
+                        {/*    <br/>*/}
+                        {/*    The second line contains <b>n</b> space-separated integers describing the respective values of <b>score[0],score[1],...,score[n-1]</b>.*/}
+                        {/*</span>*/}
+                        {/*<br/><br/>*/}
+                        {/*<h4>*/}
+                        {/*    Constraints*/}
+                        {/*</h4>*/}
+                        {/*<span>*/}
+                        {/*    <ul>*/}
+                        {/*        <li>*/}
+                        {/*            <b>{'1 <= n <= 1000'}</b>*/}
+                        {/*        </li>*/}
+                        {/*        <li>*/}
+                        {/*            <b>{'0 <= score[i] <= 10^18'}</b>*/}
+                        {/*        </li>*/}
+                        {/*    </ul>*/}
+                        {/*</span>*/}
+                        {/*<br/>*/}
+                        {/*<h4>*/}
+                        {/*    Output Format*/}
+                        {/*</h4>*/}
+                        {/*<span>*/}
+                        {/*    Print two space-separated integers describing the respective numbers of times*/}
+                        {/*    her best (highest) score increased and her worst (lowest) score decreased.*/}
+                        {/*</span>*/}
+                        {/*<br/><br/>*/}
+                        {/*<h4>*/}
+                        {/*    Sample Input #1*/}
+                        {/*</h4>*/}
+                        {/*<div className={'border border-dark rounded pt-2 pl-3 pb-2'} style={{width: this.state.width,backgroundColor:'#c1c1c1'}}>*/}
+                        {/*    9 <br/>*/}
+                        {/*    10 5 20 20 4 5 2 25 1*/}
+                        {/*</div>*/}
+                        {/*<br/><br/>*/}
+                        {/*<h4>*/}
+                        {/*    Sample Output #1*/}
+                        {/*</h4>*/}
+                        {/*<div className={'border border-dark rounded pt-2 pl-3 pb-2'} style={{width: this.state.width,backgroundColor:'#c1c1c1'}}>*/}
+                        {/*    2 4*/}
+                        {/*</div>*/}
+                        <h3>
+                            {this.state.title}
+                        </h3>
+                        {this.state.description}
                     </div>
                     <div className={'border mb-5'}> </div>
                     <div className={'rounded-top border-bottom-0'} style={{width:this.state.width,minHeight: '30px',backgroundColor: '#c1c1c1'}}>

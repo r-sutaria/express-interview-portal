@@ -212,7 +212,7 @@ export default class Sidebar extends React.Component {
                             </Link>
                         </li>
                         <li className="nav-item">
-                            <Link to={'/practice'} className={'nav-link active text-dark'}>
+                            <Link to={'/practiceQuestions/1'} className={'nav-link active text-dark'}>
                                 <b>
                                     <span className={'mb-1 col-form-label'}>
                                         <AiOutlineCode size={20}/>

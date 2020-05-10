@@ -10,10 +10,64 @@ export default class ExperiencePage extends React.Component {
             experience: {},
             id:this.props.match.params.id,
             loading: true,
-            show: true
+            show: true,
+            title:""
         };
         this.getExperiences();
     }
+
+    TokenNumber= async ()=>{
+        const url = `https://powerful-depths-16046.herokuapp.com/token/`+this.state.author; // receiver id
+        await fetch(url).then(res=>res.json()).then(res=>{this.setState({receiverToken:res.token});}).catch(err=>alert("error connecting to database "+err));
+    };
+
+    sendPushNotificationAccept = async () => {
+        await this.TokenNumber();
+        if(this.state.receiverToken!==""){
+            const message = {
+                to: this.state.receiverToken,
+                sound: 'default',
+
+                body: this.state.title+" has been accepted",
+                data: { data: 'goes here' },
+                _displayInForeground: true,
+            };
+            const response = await fetch('https://exp.host/--/api/v2/push/send', {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Accept-encoding': 'gzip, deflate',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(message),
+            }).catch(err=>console.log(err));
+        }
+    };
+
+    sendPushNotificationReject = async () => {
+        await this.TokenNumber();
+        if(this.state.receiverToken!==""){
+            const message = {
+                to: this.state.receiverToken,
+                sound: 'default',
+                title: 'Regarding shared Interview Experience',
+                body: this.state.title+" has been rejected",
+                data: { data: 'goes here' },
+                _displayInForeground: true,
+            };
+            const response = await fetch('https://exp.host/--/api/v2/push/send', {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Accept-encoding': 'gzip, deflate',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(message),
+            }).catch(err=>console.log(err));
+        }
+    };
+
+
 
     getExperiences = () => {
         const uri='/getExperience';
@@ -31,7 +85,7 @@ export default class ExperiencePage extends React.Component {
             return response.json()
         }).then((response) => {
             const experience = response[0];
-            this.setState({experience, loading: false, show: experience.accepted !== false});
+            this.setState({experience, loading: false, show: experience.accepted !== false,title:`${experience.company} Interview Experience | ${experience.jobprofile}`});
             console.log(experience);
             if(response.status === 500) {
                 console.log("Error while connecting to database please check your internet connection");
@@ -162,6 +216,7 @@ export default class ExperiencePage extends React.Component {
                                     size={'sm'}
                                     type={'Submit'}
                                     onClick={(e) => {
+                                        this.sendPushNotificationAccept();
                                         fetch('/updateExperience', {
                                             method: 'POST',
                                             headers: {
@@ -191,7 +246,8 @@ export default class ExperiencePage extends React.Component {
                                         exp.accepted = false;
                                         this.setState({
                                             experience: exp
-                                        })
+                                        });
+                                        this.sendPushNotificationReject();
                                     }
                                     }
                                 >

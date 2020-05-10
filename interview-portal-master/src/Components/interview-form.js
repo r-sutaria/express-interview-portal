@@ -31,6 +31,13 @@ export default class ExperienceForm extends React.Component {
         this.removeCard = this.removeCard.bind(this);
     }
 
+    componentDidMount() {
+        this.setState({
+            author: this.props.user
+        });
+        console.log(this.props.user);
+    }
+
     getDate = () => {
         let today = new Date();
         let dd = String(today.getDate()).padStart(2, '0');

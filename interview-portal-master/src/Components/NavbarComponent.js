@@ -69,14 +69,14 @@ export default class NavbarComponent extends React.Component {
                 >
                     <div className={'container-fluid'}>
                         <div className={'mr-4'}>
+                            <span className={'text-white mr-3'} onMouseDown={this.props.onSidebarToggleClick} style={{marginLeft:'-10px'}}>
+                                <AiOutlineMenu size={20}/>
+                            </span>
                             <NavbarBrand
                                 className={'text-left'}
                                 style={{minWidth:'20%'}}
                                 href={'/'}
                             >
-                                <span className={'text-white mr-3'} onMouseDown={this.props.onSidebarToggleClick} style={{marginLeft:'-10px'}}>
-                                    <AiOutlineMenu size={20}/>
-                                </span>
                                 <span
                                     to={'/'}
                                     className={'text-white'}

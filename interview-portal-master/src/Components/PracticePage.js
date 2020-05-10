@@ -7,9 +7,27 @@ export default class PracticePage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            myChart: null
+            myChart: null,
+            problems:[],
+            loaded:false
         };
+        this.getQuestion();
     }
+
+    getQuestion = () => {
+        const page = this.props.match.params.pg;
+        console.log(page);
+        fetch('/getQuestions/'+page)
+            .then(res => res.json())
+            .then(res => {
+                let problems = res;
+                this.setState({problems,loaded:true});
+                console.log(problems);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    };
 
     componentDidMount() {
         const ctx = document.getElementById('myChart');
@@ -40,10 +58,7 @@ export default class PracticePage extends React.Component {
         return (
             <div>
                 <div className={'float-left border-right border-dark'} style={{width:'50%',minHeight:'100%',marginTop:'-7px'}}>
-                    <PracticeList/>
-                    <PracticeList/>
-                    <PracticeList/>
-                    <PracticeList/>
+                    <PracticeList problems={this.state.problems}/>
                 </div>
                 <div className={'float-left'} style={{width:'50%'}}>
                     <div className="chart-container" style={{position: 'relative', height:'25vh', width:'100%'}}>

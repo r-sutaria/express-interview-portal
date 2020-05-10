@@ -15,23 +15,24 @@ import LoginPage from "./LoginPage";
 import ReviewPage from "./ReviewPage";
 import UserPage from "./UserPage";
 import Prepare from "./Prepare";
-export default function Main() {
+export default function Main(props) {
+    // console.log(props.user);
     return(
     <Switch>
-        <Route exact path={'/'} component={ExperienceForm} />
-        <Route exact path={'/practice/problem1'} component={CodeEditor} />
-        <Route exact path={'/practice'} component={PracticePage} />
+        <Route exact path={'/'} component={() => <ExperienceForm user={props.user}/>} />
+        <Route exact path={'/practice/:id'} component={CodeEditor} />
+        <Route exact path={'/practiceQuestions/:pg'} component={PracticePage} />
         <Route exact path={'/prepare/:company'} component={Prepare} />
         <Route exact path={'/queries'} component={QueryPageComponent}/>
         <Route exact path={'/experiences'} component={ExperienceList} />
         <Route exact path={'/experiences/:id'} component={ExperiencePage} />
         <Route exact path={'/queries/:id'} component={BlogList} />
-        <Route exact path={'/notifications'} component={NotificationComponent} />
+        <Route exact path={'/notifications'} render={() => <NotificationComponent user={props.user}/>} />
         <Route path={'/search::term'} component={SearchPage} />
         <Route path={'/saved'} component={SavedPage} />
         <Route path={'/login'} component={LoginPage} />
         <Route path={'/review'} component={ReviewPage} />
-        <Route exact path={'/interview-experience-form'} component={ExperienceForm} />
+        <Route exact path={'/interview-experience-form'} component={() => <ExperienceForm user={props.user}/>} />
         <Route exact path={'/usr/user1'} component={UserPage} />
         <Route exact path={'/placement'}
                component={
