@@ -163,21 +163,6 @@ export default class Sidebar extends React.Component {
                         }
                         {
                             this.props.user ?
-                            <li className="nav-item">
-                                <Link to={'/saved'} className={'nav-link active text-dark'}>
-                                    <b>
-                                        <span className={'mb-1 col-form-label'}>
-                                            <FaBookmark size={20}/>
-                                        </span>
-                                        {' '}Saved
-                                    </b>
-                                </Link>
-                            </li>
-                                :
-                                <li></li>
-                        }
-                        {
-                            this.props.user ?
                                 <li className="nav-item">
                                     <Link to={'/review'} className={'nav-link active text-dark'}>
                                         <b>

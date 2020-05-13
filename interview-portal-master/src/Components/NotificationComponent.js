@@ -22,7 +22,7 @@ export default class NotificationComponent extends React.Component {
             })
         }).then( res => res.json() )
             .then((response) => {
-            const messages = response[0].notification;
+            const messages = response;
             console.log(messages);
             if(this.state.loading) this.setState({messages,loading:false});
         }).catch( error => console.log(error.message));

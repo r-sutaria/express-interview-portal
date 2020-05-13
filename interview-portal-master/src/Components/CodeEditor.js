@@ -25,15 +25,20 @@ export default class CodeEditor extends React.Component {
             language: 'C',
             loaded: false,
             description: <div/>,
-            title: <div/>
+            title: <div/>,
+            outputElement: <div/>,
+            outputLoaded: false,
+            input:""
         };
         // console.log(this.props);
+        this.outputRef = React.createRef();
     }
     mode_map = {
         'C' : 'c_cpp',
         'CPP': 'c_cpp',
         'JAVA': 'java',
         'PYTHON': 'python',
+        'PYTHON3':'python',
         'KOTLIN': 'kotlin'
     };
 
@@ -48,8 +53,9 @@ export default class CodeEditor extends React.Component {
                 .then(res => res.json())
                 .then(res => {
                     console.log(res);
+                    const desc = res.description.substring(0,res.description.length-168);
                     const divElement = <div dangerouslySetInnerHTML={{__html:
-                        res.description}}/>;
+                        desc}}/>;
                     const titleElement = <div dangerouslySetInnerHTML={{__html:
                         res.title}}/>;
                        this.setState({
@@ -64,65 +70,17 @@ export default class CodeEditor extends React.Component {
         }
     }
 
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if(this.state.outputLoaded) {
+            // this.outputRef.current.focus();
+        }
+    }
+
     render() {
         return(
             <div className={'container'}>
                 <div className={'ml-3 mt-2'}>
                     <div className={'mb-5'}>
-                        {/*<h3>Breaking the Records</h3>*/}
-                        {/*<span>*/}
-                        {/*    Maria plays college basketball and wants to go pro.*/}
-                        {/*    Each season she maintains a record of her play.*/}
-                        {/*    She tabulates the number of times she breaks her season record for most points and least points in a game.*/}
-                        {/*    Points scored in the first game establish her record for the season,*/}
-                        {/*    and she begins counting from there.*/}
-                        {/*</span>*/}
-                        {/*<br/><br/>*/}
-                        {/*<h4>*/}
-                        {/*    Input Format*/}
-                        {/*</h4>*/}
-                        {/*<span>*/}
-                        {/*    The first line contains an integer <b>n</b>, the number of games.*/}
-                        {/*    <br/>*/}
-                        {/*    The second line contains <b>n</b> space-separated integers describing the respective values of <b>score[0],score[1],...,score[n-1]</b>.*/}
-                        {/*</span>*/}
-                        {/*<br/><br/>*/}
-                        {/*<h4>*/}
-                        {/*    Constraints*/}
-                        {/*</h4>*/}
-                        {/*<span>*/}
-                        {/*    <ul>*/}
-                        {/*        <li>*/}
-                        {/*            <b>{'1 <= n <= 1000'}</b>*/}
-                        {/*        </li>*/}
-                        {/*        <li>*/}
-                        {/*            <b>{'0 <= score[i] <= 10^18'}</b>*/}
-                        {/*        </li>*/}
-                        {/*    </ul>*/}
-                        {/*</span>*/}
-                        {/*<br/>*/}
-                        {/*<h4>*/}
-                        {/*    Output Format*/}
-                        {/*</h4>*/}
-                        {/*<span>*/}
-                        {/*    Print two space-separated integers describing the respective numbers of times*/}
-                        {/*    her best (highest) score increased and her worst (lowest) score decreased.*/}
-                        {/*</span>*/}
-                        {/*<br/><br/>*/}
-                        {/*<h4>*/}
-                        {/*    Sample Input #1*/}
-                        {/*</h4>*/}
-                        {/*<div className={'border border-dark rounded pt-2 pl-3 pb-2'} style={{width: this.state.width,backgroundColor:'#c1c1c1'}}>*/}
-                        {/*    9 <br/>*/}
-                        {/*    10 5 20 20 4 5 2 25 1*/}
-                        {/*</div>*/}
-                        {/*<br/><br/>*/}
-                        {/*<h4>*/}
-                        {/*    Sample Output #1*/}
-                        {/*</h4>*/}
-                        {/*<div className={'border border-dark rounded pt-2 pl-3 pb-2'} style={{width: this.state.width,backgroundColor:'#c1c1c1'}}>*/}
-                        {/*    2 4*/}
-                        {/*</div>*/}
                         <h3>
                             {this.state.title}
                         </h3>
@@ -218,8 +176,7 @@ export default class CodeEditor extends React.Component {
                                 <option value={'CPP'}>C++</option>
                                 <option value={'JAVA'}>Java</option>
                                 <option value={'PYTHON'}>Python 2.7</option>
-                                <option value={'PYTHON'}>Python 3.0</option>
-                                <option value={'KOTLIN'}>Kotlin</option>
+                                <option value={'PYTHON3'}>Python 3.0</option>
                             </Input>
                         </div>
                     </div>
@@ -236,18 +193,95 @@ export default class CodeEditor extends React.Component {
                         fontSize={this.state.fontSize}
                         focus={true}
                     />
+                    <br/>
+                    <h5>
+                        Input
+                    </h5>
+                    <Input
+                        type={'textarea'}
+                        rows={5}
+                        style={{width:this.state.width}}
+                        value={this.state.input}
+                        onChange={(e) => {
+                            this.setState({
+                                input:e.target.value
+                            })
+                        }}
+                    />
                 </div>
-                <Button
-                    className={'my-3 float-right'}
-                    style={{marginRight: '17.5%'}}
-                    color={'dark'}
-                    onMouseDown={(e) => {
-                        // alert("Thai gyu bc!");
-                        e.preventDefault();
-                    }}
-                >
-                    Submit
-                </Button>
+                <div>
+                    <Button
+                        className={'my-3 float-right'}
+                        style={{marginRight: '17.5%'}}
+                        color={'dark'}
+                        onMouseDown={(e) => {
+                            // alert("Thai gyu bc!");
+                            fetch('/api/run',{
+                                method:'POST',
+                                headers:{
+                                    'Accept':'application/json',
+                                    'Content-Type':'application/json'
+                                },
+                                body: JSON.stringify({
+                                    "code":this.state.value,
+                                    "language":this.state.language,
+                                    "input":this.state.input
+                                })
+                            }).then( response => {
+                                return response.json()
+                            }).then((response) => {
+                                console.log(response);
+                                const outputElement = <div ref={this.outputRef} dangerouslySetInnerHTML={{__html:response.run_status.output_html}}/>;
+                                this.setState({outputLoaded:true,outputElement});
+                            }).catch( error => console.log(error.message));
+                            e.preventDefault();
+                            e.preventDefault();
+                        }}
+                    >
+                        Run
+                    </Button>
+                    <Button
+                        className={'my-3 mr-1 float-right'}
+                        color={'dark'}
+                        onMouseDown={(e) => {
+                            this.setState({
+                                outputLoaded: true,
+                                outputText: "Compiling.."
+                            });
+                            fetch('/api/compile',{
+                                method:'POST',
+                                headers:{
+                                    'Accept':'application/json',
+                                    'Content-Type':'application/json'
+                                },
+                                body: JSON.stringify({
+                                    "code":this.state.value,
+                                    "language":this.state.language,
+                                    "input":this.state.input
+                                })
+                            }).then( response => {
+                                return response.json()
+                            }).then((response) => {
+                                console.log(response);
+                                const text = response.compile_status === "OK" ? "Compiled Successfully" : response.compile_status;
+                                const outputElement = <div ref={this.outputRef} dangerouslySetInnerHTML={{__html:text}}/>;
+                                this.setState({outputLoaded:true,outputElement});
+                            }).catch( error => console.log(error.message));
+                            e.preventDefault();
+                        }}
+                    >
+                        Compile
+                    </Button>
+                </div>
+                {
+                    this.state.outputLoaded?
+
+                        <div className={'ml-3 mt-5'}>
+                            <h5>Output</h5>
+                            {this.state.outputElement}
+                        </div>
+                    : <div/>
+                }
             </div>
         );
     }

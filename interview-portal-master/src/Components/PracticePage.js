@@ -59,6 +59,11 @@ export default class PracticePage extends React.Component {
             <div>
                 <div className={'float-left border-right border-dark'} style={{width:'50%',minHeight:'100%',marginTop:'-7px'}}>
                     <PracticeList problems={this.state.problems}/>
+                    {
+                        parseInt(this.props.match.params.pg) !== 1 ? <a className={'ml-1'} href={'/practiceQuestions/'+(parseInt(this.props.match.params.pg)-1).toString()}> {'<'} </a> : <div/>
+
+                    }
+                        <a className={'float-right mr-4'} href={'/practiceQuestions/'+(parseInt(this.props.match.params.pg)+1).toString()}>{'>'} </a>
                 </div>
                 <div className={'float-left'} style={{width:'50%'}}>
                     <div className="chart-container" style={{position: 'relative', height:'25vh', width:'100%'}}>

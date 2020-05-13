@@ -40,30 +40,7 @@ export default class QueryCard extends React.Component {
                         }
                     </Col>
                 </Row>
-                <div className={'ml-3 mb-3'}>
-                    <AnswerProfileCard
-                        src={'/pikachu.jpg'}
-                        name={'Rutvik Sutaria'}
-                        description={'8th semester CSE student'}
-                    />
-                    <div className={'ml-3 mt-1'}>
-                        <div style={{height:75,overflow:'hidden'}}>
-                            I attended Amazon interview recently. You need to be good at basics of data structures,
-                            algorithms and object oriented design.
-                            One cannot read object oriented concepts and become a master in it.
-                            Try implementing it in whatever the project you're doing.
-                            That way it's easy to gain the intuition about the object oriented programming and design.
-                            I prepared for data structure questions from cracking the coding interview.
-                            You need to understand the basics of the important data structures and
-                            how they work and try implementing the basic version of those.
-                            This will help in understanding its applications...
-                        </div>
-                        {'...'}
-                        <Link to={'/queries/'+id+'/answer/'}>
-                            (more)
-                        </Link>
-                    </div>
-                </div>
+
             </div>
         );
     }

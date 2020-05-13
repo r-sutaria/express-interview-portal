@@ -7,38 +7,43 @@ export default class UserPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            experiences: [
-                'Amazon Interview Experience For SDE-I By Rutvik Sutaria',
-                'Amazon Interview Experience For SDE-I By Rutvik Sutaria',
-                'Amazon Interview Experience For SDE-I By Rutvik Sutaria'
-            ],
-            queries: [
-                'What are some tips to crack the Amazon interview?',
-                'What are some tips to crack the Amazon interview?',
-                'What are some tips to crack the Amazon interview?'
-            ],
-            problems: [
-                'Printing the side view of the binary tree in O(1)',
-                'Printing the side view of the binary tree in O(1)',
-                'Printing the side view of the binary tree in O(1)'
-            ],
+            experiences: [],
+            queries: [],
+            problems: [],
             open: false,
-            username: 'Rutvik Sutaria',
+            username: '',
             description: '8th semester CSE student',
             inputUsername: '',
             inputDescription: ''
-        }
+        };
+        this.getInfo();
     }
 
+    getInfo = () => {
+        const user = localStorage.getItem('user');
+        fetch('/userExperiences/'+user)
+            .then(resp => resp.json())
+            .then(resp => {
+                this.setState({username:user,experiences:resp});
+                // console.log(resp);
+            });
 
-    renderItems = (item,index) => {
+        fetch('/userQueries/'+user)
+            .then(resp => resp.json())
+            .then(resp => this.setState({queries:resp}));
+    };
+
+
+    renderItems = (item,index,type) => {
+        const text = type === "experiences" ? `${item.company} interview experience for ${item.jobprofile}` : item.question;
+
         const ret = index%2 === 0 ?
             <div className={'bg-light col-form-label'} style={{height:50}}>
-                <a href={'/practice'} className={'text-dark'}><h6>{item}</h6></a>
+                <a href={'/'+type+'/'+item._id} className={'text-dark'}><h6>{text}</h6></a>
             </div>
             :
                 <div className={'col-form-label'} style={{height:50}}>
-                    <a href={'/practice'} className={'text-dark'}><h6>{item}</h6></a>
+                    <a href={'/practice'} className={'text-dark'}><h6>{text}</h6></a>
                 </div>;
         return(ret);
     };
@@ -79,11 +84,11 @@ export default class UserPage extends React.Component {
                     </h3>
                     {
                         this.state.experiences.map((item,index) => {
-                            return this.renderItems(item,index);
+                            // console.log(item);
+                            return this.renderItems(item,index,"experiences");
                         })
 
                     }
-                    <Link to={'/usr/user1/experiences'}>See All</Link>
                 </div>
 
                 <div className={'mt-3'}>
@@ -92,7 +97,7 @@ export default class UserPage extends React.Component {
                     </h3>
                     {
                         this.state.queries.map((item,index) => {
-                            return this.renderItems(item,index);
+                            return this.renderItems(item,index,'queries');
                         })
                     }
                     <Link to={'/usr/user1/queries'}>See All</Link>
@@ -104,11 +109,10 @@ export default class UserPage extends React.Component {
                     </h3>
                     {
                         this.state.problems.map((item,index) => {
-                            return this.renderItems(item,index);
+                            return this.renderItems(item,index,'practice');
                         })
                     }
                 </div>
-                <Link to={'/usr/user1/problems-solved'}>See All</Link>
                 <Modal
                     isOpen={this.state.open}
                     toggle={this.toggleModal}

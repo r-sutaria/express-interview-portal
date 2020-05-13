@@ -61,14 +61,6 @@ export default class NotificationCard extends React.Component {
                                     {this.props.message}
                                 </p>
                             </h6>
-                            <div>
-                                <Button color={'link'} className={'text-dark'} size={'sm'}>
-                                    <h6>Delete</h6>
-                                </Button>
-                                <Button color={'link'} className={'text-dark'} size={'sm'}>
-                                    <h6>Reply</h6>
-                                </Button>
-                            </div>
                         </div>
                     </div>
                 }

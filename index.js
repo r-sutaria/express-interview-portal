@@ -2,7 +2,9 @@ const htmlParser = require('node-html-parser');
 const express = require('express');
 const path = require('path');
 const axios = require('axios');
+const hackerEarth = require('hackerearth-node');
 const app = express();
+const {Expo} = require('expo-server-sdk');
 const bodyparser = require('body-parser');
 app.use(bodyparser.json());
 const {exec} = require('child_process');
@@ -116,6 +118,24 @@ app.post('/getAnswers',(req,res,next) => {
     });
 });
 
+app.post('/getNotifications',(req,res) => {
+   const data = req.body;
+    MongoClient.connect(uri,function(err,client){
+        if(err)
+            console.log("Error while connecting to DB");
+        else{
+            const collection = client.db("Main").collection("Register");
+            // console.log(data.username);
+            let cursor=collection.find({_id:data.user});
+            cursor.toArray((err,resp)=>{
+                if(err) throw err;
+                res.status(200).send(resp[0].notification);
+                client.close();
+            })
+        }
+    });
+});
+
 app.post('/username',(req,res,next) => {
    const data = req.body;
     MongoClient.connect(uri,function(err,client){
@@ -144,6 +164,7 @@ app.post('/registerUser',(req,res,next) => {
             data.type = "N";
             data.notification = [];
             data.review = [];
+            data.token = null;
             collection.insertOne(data,function(err,resp){
                 if(err) {
                     res.status(500).send("Error");
@@ -183,6 +204,22 @@ app.post('/loginUser',(req,res) => {
     });
 });
 
+app.post('/sendMessage',function(req,res) {
+    const data = req.body;
+    MongoClient.connect(uri,function(err,client){
+        if(err)
+            console.log("Error while connecting to DB");
+        else{
+            const collection = client.db("Main").collection("Register");
+            let cursor=collection.find({_id:data.id});
+            cursor.toArray((err,resp)=>{
+                res.status(200).send(resp[0].notification);
+                client.close();
+            });
+        }
+    });
+});
+
 app.post('/email',(req,res,next) => {
     const data = req.body;
     MongoClient.connect(uri,function(err,client){
@@ -200,6 +237,38 @@ app.post('/email',(req,res,next) => {
     });
 });
 
+function addNotification(receiver,message,e_id,sender) {
+    MongoClient.connect(uri,function(err,client){
+        if(err)
+            console.log("Error while connecting to DB");
+        else{
+            const collection = client.db("Main").collection("Register");
+            let cursor=collection.find({_id:receiver});
+            cursor.toArray((err,resp)=>{
+                if(err) throw err;
+                // client.close();
+                // console.log(resp[0].notification)
+                let notifications = resp[0].notification;
+                notifications.push({
+                    message:message,
+                    e_id:e_id,
+                    sender:sender
+                });
+                collection.updateOne({_id: receiver}, {$set: {notification: notifications}}, (err, response) => {
+                    // console.log(response);
+                    console.log(err);
+                    client.close();
+                })
+            })
+        }
+    });
+}
+
+// app.get('/test',(req,res) => {
+//     addNotification('kamiyab','test','test','rutvik');
+// });
+
+
 
 app.post('/updateExperience',(req,res,next) => {
     const data = req.body;
@@ -210,15 +279,27 @@ app.post('/updateExperience',(req,res,next) => {
         }
         else{
             const collection = client.db("Main").collection("Experience");
-            collection.updateOne({_id:ObjectId(data.id)},{$set:{accepted:data.accepted}},(err,resp) => {
-                if(err){
-                    res.status(500).send(err);
-                }
-                else{
-                    res.status(200).send(resp);
-                }
-                client.close();
-            });
+            if(data.rejectMessage === undefined) {
+                collection.updateOne({_id: ObjectId(data.id)}, {$set: {accepted: data.accepted}}, (err, resp) => {
+                    if (err) {
+                        res.status(500).send(err);
+                    } else {
+                        res.status(200).send(resp);
+                    }
+                    client.close();
+                });
+            }
+            else {
+                collection.updateOne({_id: ObjectId(data.id)}, {$set: {accepted: data.accepted}}, (err, resp) => {
+                    if (err) {
+                        res.status(500).send(err);
+                    } else {
+                        res.status(200).send(resp);
+                    }
+                    addNotification(data.receiver,data.rejectMessage,data.e_id,data.sender);
+                    client.close();
+                });
+            }
         }
     });
 });
@@ -239,6 +320,25 @@ app.get('/experiences',(req,res,next) => {
         }
     });
 });
+
+app.get('/userExperiences/:user',(req,res,next) => {
+    console.log('Experience Get Request');
+    MongoClient.connect(uri,function(err,client){
+        if(err)
+            console.log("Error while connecting to DB");
+        else{
+            const collection = client.db("Main").collection("Experience");
+            let cursor=collection.find({author:req.params.user});
+            cursor.toArray((err,resp)=>{
+                if(err) throw err;
+                res.status(200).send(resp);
+                // console.log(resp);
+                client.close();
+            })
+        }
+    });
+});
+
 app.get('/queries',(req,res) => {
     MongoClient.connect(uri,function(err,client){
         if(err){
@@ -247,6 +347,24 @@ app.get('/queries',(req,res) => {
         }else{
             const collection=client.db("Main").collection("Queries");
             const cursor=collection.find();
+            cursor.toArray((err,resp)=>{
+                if(err) throw err;
+                res.status(200).send(resp);
+                client.close();
+            });
+        }
+    });
+});
+
+
+app.get('/userQueries/:author',(req,res) => {
+    MongoClient.connect(uri,function(err,client){
+        if(err){
+            console.log("Error while connecting to DB");
+            res.status(500).send("Unable to connect to DB");
+        }else{
+            const collection=client.db("Main").collection("Queries");
+            const cursor=collection.find({author:req.params.author});
             cursor.toArray((err,resp)=>{
                 if(err) throw err;
                 res.status(200).send(resp);
@@ -312,32 +430,33 @@ app.get('/api/passwords',(req,res,next) => {
     console.log('Sent a json array.');
 });
 
-app.post('/getNotifications',(req,res) => {
+let hE = new hackerEarth('a249b98ec56b0a7e52d802c5e4fe57dffa7b3d0f');
+app.post('/api/compile',(req,res,next) => {
     const data = req.body;
-    MongoClient.connect(uri,function(err,client){
-        if(err)
-            console.log("Error while connecting to DB");
-        else{
-            const collection = client.db("Main").collection("Register");
-            let cursor=collection.find({_id:data.user});
-            cursor.toArray((err,resp)=>{
-                if(err) throw err;
-                res.status(200).send(resp);
-                // console.log(resp);
-                client.close();
-            })
-        }
-    });
+    let config = {};
+    config.time_limit = 1;
+    config.memory_limit = 323244;
+    config.source = data.code;
+    config.language = data.language;
+    config.input=data.input;
+    hE.compile(config)
+        .then(resp => res.status(200).send(resp))
+        .catch(err => console.log("Error: "+err));
 });
 
-app.get('/api/compile',(req,res,next) => {
+app.post('/api/run',(req,res,next) => {
+    const data = req.body;
+    let config = {};
+    config.time_limit = 1;
+    config.memory_limit = 323244;
+    config.source = data.code;
+    config.language = data.language;
+    config.input=data.input;
 
+    hE.run(config)
+        .then(resp => res.status(200).send(resp))
+        .catch(err => console.log(err));
 });
-
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname+'/interview-portal-master/build/index.html'));
-});
-
 
 app.get('/token/:id',function(req,res){
     const id=req.params.id;
@@ -359,6 +478,79 @@ app.get('/token/:id',function(req,res){
             });
         }
     });
+});
+
+async function sendNotification(tokenNumber,message) {
+    let expo = new Expo();
+    let messages = [];
+    messages.push({
+        to: tokenNumber,
+        sound: 'default',
+        body: message,
+        data: { withSome: 'data' },
+    });
+
+    let chunks = expo.chunkPushNotifications(messages);
+    for(let chunk of chunks) {
+        try{
+            return await expo.sendPushNotificationsAsync(chunk);
+        }
+        catch (e) {
+            console.log(e);
+        }
+    }
+}
+
+app.post('/notifyRejection',function(req,res) {
+    const data = req.body;
+    const tokenNumber = data.tokenNumber,message = data.title+"has been rejected";
+    sendNotification(tokenNumber,message)
+        .then(resp => {
+            res.status(200).send(resp);
+            // console.log(resp);
+        })
+        .catch(err => console.log(err));
+});
+
+app.post('/notifyAccept',function(req,res) {
+    const data = req.body;
+    const tokenNumber = data.tokenNumber,message = data.title+"has been accepted";
+    sendNotification(tokenNumber,message)
+        .then(resp => {
+            res.status(200).send(resp);
+        })
+        .catch(err => console.log(err));
+});
+
+app.get('/getSuggestions/:usr',(req,res) => {
+    axios.get('https://portal-python-server.herokuapp.com/getSuggestions/'+req.params.usr)
+        .then(resp=>resp.data)
+        .then(resp=>res.status(200).send(resp.result))
+        .catch(err=>console.log("Error: "+err))
+});
+
+app.post('/getProblemId',(req,res) => {
+   const data = req.body;
+    MongoClient.connect(uri,function(err,client){
+        if(err){
+            res.status(500).send("Unable to connect to database");
+            client.close();
+        }else{
+            const collection=client.db("Questions").collection("gfg");
+            collection.findOne({"link":data.link},function(err,result){
+                res.status(200).send({problem:result});
+                client.close();
+            });
+        }
+    });
+});
+
+
+
+
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname+'/interview-portal-master/build/index.html'));
 });
 
 const port = process.env.PORT || 5000;

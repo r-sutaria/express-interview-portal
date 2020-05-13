@@ -11,60 +11,39 @@ export default class ExperiencePage extends React.Component {
             id:this.props.match.params.id,
             loading: true,
             show: true,
-            title:""
+            title:"",
+            rejectMessage:""
         };
         this.getExperiences();
     }
 
     TokenNumber= async ()=>{
-        const url = `https://powerful-depths-16046.herokuapp.com/token/`+this.state.author; // receiver id
-        await fetch(url).then(res=>res.json()).then(res=>{this.setState({receiverToken:res.token});}).catch(err=>alert("error connecting to database "+err));
+        const url = `/token/`+this.state.experience.author; // receiver id
+        await fetch(url)
+            .then(res=>res.json())
+            .then(res=>{
+                // console.log(res);
+                this.setState({
+                    tokenNumber:res.token
+                })
+            })
+            .catch(err=>console.log("Error connecting to database "+err));
     };
 
-    sendPushNotificationAccept = async () => {
-        await this.TokenNumber();
-        if(this.state.receiverToken!==""){
-            const message = {
-                to: this.state.receiverToken,
-                sound: 'default',
 
-                body: this.state.title+" has been accepted",
-                data: { data: 'goes here' },
-                _displayInForeground: true,
-            };
-            const response = await fetch('https://exp.host/--/api/v2/push/send', {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    'Accept-encoding': 'gzip, deflate',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(message),
-            }).catch(err=>console.log(err));
-        }
-    };
-
-    sendPushNotificationReject = async () => {
+    sendPushNotification = async (action) => {
         await this.TokenNumber();
-        if(this.state.receiverToken!==""){
-            const message = {
-                to: this.state.receiverToken,
-                sound: 'default',
-                title: 'Regarding shared Interview Experience',
-                body: this.state.title+" has been rejected",
-                data: { data: 'goes here' },
-                _displayInForeground: true,
-            };
-            const response = await fetch('https://exp.host/--/api/v2/push/send', {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    'Accept-encoding': 'gzip, deflate',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(message),
-            }).catch(err=>console.log(err));
-        }
+        fetch('/notify'+action, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Accept-encoding': 'gzip, deflate',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({'tokenNumber':this.state.tokenNumber,'title':this.state.title}),
+        })
+            .then(resp => resp)
+            .catch(err=>console.log(err));
     };
 
 
@@ -164,8 +143,8 @@ export default class ExperiencePage extends React.Component {
                     </div>
                     <div className={'ml-4 border-top'}>
                         <div className={'mt-3'}>
-                            {experience.rounds !== undefined ? experience.rounds.map((round) => {
-                                return this.renderRound(round);
+                            {experience.rounds !== undefined ? experience.rounds.map((round,index) => {
+                                return <div key={index}>{this.renderRound(round)}</div>;
                             }): <div />}
                         </div>
                     </div>
@@ -216,7 +195,7 @@ export default class ExperiencePage extends React.Component {
                                     size={'sm'}
                                     type={'Submit'}
                                     onClick={(e) => {
-                                        this.sendPushNotificationAccept();
+                                        this.sendPushNotification('Accept').catch(e=>console.log(e));
                                         fetch('/updateExperience', {
                                             method: 'POST',
                                             headers: {
@@ -247,7 +226,6 @@ export default class ExperiencePage extends React.Component {
                                         this.setState({
                                             experience: exp
                                         });
-                                        this.sendPushNotificationReject();
                                     }
                                     }
                                 >
@@ -263,12 +241,20 @@ export default class ExperiencePage extends React.Component {
                                     name={'text'}
                                     rows={5}
                                     placeholder={'Reason for rejection...'}
+                                    value={this.state.rejectMessage}
+                                    onChange={(e)=>{
+                                        e.preventDefault();
+                                        this.setState({
+                                            rejectMessage:e.target.value
+                                        })
+                                    }}
                                 />
                             </div>
                             <div className={'pt-2 pl-4 float-right'}>
                                 <Button color={'dark'} size={'sm'}
                                     onClick={(e) => {
                                         e.preventDefault();
+                                        this.sendPushNotification('Rejection').catch(e=>console.log(e));
                                         fetch('/updateExperience', {
                                             method: 'POST',
                                             headers: {
@@ -277,7 +263,11 @@ export default class ExperiencePage extends React.Component {
                                             },
                                             body: JSON.stringify({
                                                 id:this.props.match.params.id,
-                                                accepted: experience.accepted
+                                                accepted: experience.accepted,
+                                                rejectMessage: this.state.rejectMessage,
+                                                e_id: this.state.id,
+                                                receiver: this.state.experience.author,
+                                                sender: "admin"
                                             })
                                         })
                                             .then(resp => resp.json())
