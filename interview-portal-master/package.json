@@ -23,7 +23,7 @@
     "draft-js-editor": "^1.12.4",
     "draft-js-inline-toolbar-plugin": "^3.0.1",
     "draft-js-plugins-editor": "^3.0.0",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "global": "^4.4.0",
     "hackerearth-node": "^2.3.9",
     "jquery": "^3.4.1",
